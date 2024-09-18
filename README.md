@@ -21,7 +21,7 @@
 1. Clone de repository:
 
     ```bash
-    git clone https://github.com/jouwgebruikersnaam/catscraper.git
+    git clone https://github.com/jeffreymooiweer/catscraper.git
     cd catscraper
     ```
 
