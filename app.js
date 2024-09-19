@@ -22,15 +22,15 @@ app.post('/scan-columns', upload.single('file'), (req, res) => {
         const filePath = req.file.path;
         const workbook = xlsx.readFile(filePath);
         const sheet = workbook.Sheets[workbook.SheetNames[0]];
-        const range = xlsx.utils.decode_range(sheet['!ref']);
+        const range = xlsx.utils.decode_range(sheet['!ref']); // Het bereik van de kolommen bepalen
         const columns = [];
 
         for (let i = range.s.c; i <= range.e.c; i++) {
-            const letter = String.fromCharCode(65 + i);
+            const letter = String.fromCharCode(65 + i); // Converteer naar A, B, C, ...
             columns.push(letter);
         }
 
-        res.json(columns);
+        res.json(columns); // Stuur de gedetecteerde kolommen terug naar de frontend
     } catch (error) {
         console.error(error);
         res.status(500).send('Fout bij het scannen van kolommen');
@@ -46,22 +46,20 @@ app.post('/upload', upload.single('file'), async (req, res) => {
             hasHeader,
             supplier1LoginURL,
             supplier1SearchURL,
+            supplier2LoginURL,
+            supplier2SearchURL,
             usernameSelector1,
             passwordSelector1,
             customerNumber1,
             customerNumberRequired1,
             customerNumberSelector1,
-            username1,
-            password1,
-            supplier2LoginURL,
-            supplier2SearchURL,
+            searchSelector1,
             usernameSelector2,
             passwordSelector2,
             customerNumber2,
             customerNumberRequired2,
             customerNumberSelector2,
-            username2,
-            password2
+            searchSelector2
         } = req.body;
 
         const workbook = xlsx.readFile(filePath);
@@ -73,35 +71,45 @@ app.post('/upload', upload.single('file'), async (req, res) => {
         });
         const page = await browser.newPage();
 
-        // Leverancier 1 - Inloggen en zoeken
-        await page.goto(supplier1LoginURL);
-        await page.type(`#${usernameSelector1}`, username1);
-        await page.type(`#${passwordSelector1}`, password1);
-        if (customerNumberRequired1 === 'on') {
-            await page.type(`#${customerNumberSelector1}`, customerNumber1);
-        }
-        await page.click('button[type="submit"]');
-        await page.waitForNavigation();
-
-        // Leverancier 1 - Artikelnummer zoeken
+        // Loop door de rijen van de Excel-sheet
         for (let i = hasHeader ? 1 : 0; i < data.length; i++) {
             const articleNumber = data[i][column];
+
+            // Inloggen en zoeken voor Leverancier 1
+            await page.goto(supplier1LoginURL);
+            await page.type(`#${usernameSelector1}`, req.body.username1);
+            await page.type(`#${passwordSelector1}`, req.body.password1);
+
+            if (customerNumberRequired1 === 'on') {
+                await page.type(`#${customerNumberSelector1}`, customerNumber1);
+            }
+
+            await page.click('button[type="submit"]'); // Pas aan naar de juiste inlogknop
+            await page.waitForNavigation(); // Wacht op inlog
+
+            // Zoeken naar artikelnummer voor Leverancier 1
             await page.goto(supplier1SearchURL.replace('{articleNumber}', articleNumber));
-            await page.waitForSelector('selector1-output');
+            await page.type(`#${searchSelector1}`, articleNumber);
+            await page.click('button[type="submit"]'); // Pas aan naar de zoekknop
+            await page.waitForSelector('selector1-output'); // Pas aan naar de juiste outputselector
             const supplierCode = await page.$eval('selector1-output', el => el.innerText);
 
-            // Leverancier 2 - Inloggen en zoeken
+            // Inloggen en zoeken voor Leverancier 2
             await page.goto(supplier2LoginURL);
-            await page.type(`#${usernameSelector2}`, username2);
-            await page.type(`#${passwordSelector2}`, password2);
+            await page.type(`#${usernameSelector2}`, req.body.username2);
+            await page.type(`#${passwordSelector2}`, req.body.password2);
+
             if (customerNumberRequired2 === 'on') {
                 await page.type(`#${customerNumberSelector2}`, customerNumber2);
             }
+
             await page.click('button[type="submit"]');
             await page.waitForNavigation();
 
-            // Leverancier 2 - Zoeken met leverancier code
+            // Zoeken naar leveranciercode voor Leverancier 2
             await page.goto(supplier2SearchURL.replace('{supplierCode}', supplierCode));
+            await page.type(`#${searchSelector2}`, supplierCode);
+            await page.click('button[type="submit"]');
             await page.waitForSelector('selector2-output');
             const itsMeArticleNumber = await page.$eval('selector2-output', el => el.innerText);
 
