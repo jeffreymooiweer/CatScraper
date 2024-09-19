@@ -1,35 +1,85 @@
+/* Algemene stijlen */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    color: #333;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f4f9;
     margin: 0;
     padding: 0;
-}
-
-.container {
-    width: 80%;
-    margin: 50px auto;
-    text-align: center;
+    color: #333;
 }
 
 h1 {
     color: #2c3e50;
+    font-size: 2.5rem;
+    margin-bottom: 20px;
 }
 
-label, input, button {
-    font-size: 18px;
-    margin: 10px;
+.container {
+    max-width: 900px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+    margin-top: 10px;
+    font-size: 1.2rem;
+}
+
+input[type="file"],
+input[type="number"],
+input[type="text"],
+input[type="checkbox"],
+button {
+    width: 100%;
     padding: 10px;
+    margin-top: 5px;
+    font-size: 1rem;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
 }
 
 button {
-    background-color: #27ae60;
+    background-color: #3498db;
     color: white;
     border: none;
     cursor: pointer;
-    padding: 10px 20px;
+    font-weight: bold;
 }
 
 button:hover {
-    background-color: #2ecc71;
+    background-color: #2980b9;
+}
+
+button:focus {
+    outline: none;
+    border: 1px solid #2980b9;
+}
+
+input:focus {
+    outline: none;
+    border: 1px solid #2980b9;
+}
+
+input[type="checkbox"] {
+    width: auto;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    button, input[type="file"], input[type="number"], input[type="text"] {
+        font-size: 0.9rem;
+    }
 }
