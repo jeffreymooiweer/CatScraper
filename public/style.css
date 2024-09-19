@@ -13,6 +13,13 @@ h1 {
     margin-bottom: 20px;
 }
 
+.logo {
+    width: 150px;
+    height: auto;
+    display: block;
+    margin: 0 auto 20px;
+}
+
 .container {
     max-width: 900px;
     margin: 50px auto;
