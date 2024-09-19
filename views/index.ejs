@@ -15,91 +15,86 @@
     </header>
 
     <div class="container">
-        <form id="uploadForm" action="/upload" method="POST" enctype="multipart/form-data">
-            <div class="form-group">
-                <label for="file">Upload Excel-bestand:</label>
-                <input type="file" name="file" id="fileInput" required>
-            </div>
+        <form action="/upload" method="POST" enctype="multipart/form-data">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="file">Upload Excel-bestand:</label>
+                    <input type="file" name="file" required>
+                </div>
 
-            <div class="form-group">
-                <label for="column">Kies Kolom met Artikelnummers:</label>
-                <select name="column" id="column" disabled>
-                    <!-- Kolommen worden dynamisch geladen na upload -->
-                </select>
-            </div>
+                <div class="form-group">
+                    <label for="column">Kies Kolom met Artikelnummers:</label>
+                    <select name="column" id="column" disabled>
+                        <!-- Kolommen dynamisch inladen vanuit backend -->
+                        <option value="">Kolommen laden...</option>
+                    </select>
+                </div>
 
-            <div class="form-group checkbox-container">
-                <label for="hasHeader">Bestand bevat koptekst</label>
-                <input type="checkbox" name="hasHeader" id="hasHeader">
-            </div>
-
-            <h3>Leverancier 1</h3>
-            <div class="supplier-section">
-                <div class="form-group">
-                    <label for="supplier1">Naam Leverancier:</label>
-                    <input type="text" name="supplier1" required>
-                </div>
-                <div class="form-group">
-                    <label for="urlField1">Zoek URL Leverancier:</label>
-                    <input type="text" name="urlField1" required placeholder="https://leverancier1.com/search/{articleNumber}">
-                </div>
-                <div class="form-group">
-                    <label for="usernameSelector1">Selector Gebruikersnaam (ID):</label>
-                    <input type="text" name="usernameSelector1" required placeholder="Bijv. j_username">
-                </div>
-                <div class="form-group">
-                    <label for="passwordSelector1">Selector Wachtwoord (ID):</label>
-                    <input type="text" name="passwordSelector1" required placeholder="Bijv. j_password">
-                </div>
-                <div class="form-group">
-                    <label for="customerNumberRequired1">Klantnummer vereist?</label>
-                    <input type="checkbox" id="customerNumberRequired1" name="customerNumberRequired1" onchange="toggleCustomerNumberField(1)">
-                </div>
-                <div class="form-group" id="customerNumberField1" style="display:none;">
-                    <label for="customerNumberSelector1">Selector Klantnummer (ID):</label>
-                    <input type="text" name="customerNumberSelector1" placeholder="Bijv. customer_number">
+                <div class="form-group checkbox-container">
+                    <label for="hasHeader">Bestand bevat koptekst</label>
+                    <input type="checkbox" name="hasHeader" id="hasHeader">
                 </div>
             </div>
 
-            <h3>Leverancier 2</h3>
-            <div class="supplier-section">
-                <div class="form-group">
-                    <label for="supplier2">Naam Leverancier:</label>
-                    <input type="text" name="supplier2" required>
+            <div class="suppliers-row">
+                <div class="supplier-section">
+                    <h3>Leverancier 1</h3>
+                    <div class="form-group">
+                        <label for="supplier1">Naam Leverancier:</label>
+                        <input type="text" name="supplier1" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="urlField1">Zoek URL Leverancier:</label>
+                        <input type="text" name="urlField1" required placeholder="https://leverancier1.com/search/{articleNumber}">
+                    </div>
+                    <div class="form-group">
+                        <label for="usernameSelector1">Selector Gebruikersnaam (ID):</label>
+                        <input type="text" name="usernameSelector1" required placeholder="Bijv. j_username">
+                    </div>
+                    <div class="form-group">
+                        <label for="passwordSelector1">Selector Wachtwoord (ID):</label>
+                        <input type="text" name="passwordSelector1" required placeholder="Bijv. j_password">
+                    </div>
+                    <div class="form-group">
+                        <label for="customerNumberRequired1">Klantnummer vereist?</label>
+                        <input type="checkbox" name="customerNumberRequired1" id="customerNumberRequired1">
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="urlField2">Zoek URL Leverancier:</label>
-                    <input type="text" name="urlField2" required placeholder="https://leverancier2.com/search/{supplierCode}">
-                </div>
-                <div class="form-group">
-                    <label for="usernameSelector2">Selector Gebruikersnaam (ID):</label>
-                    <input type="text" name="usernameSelector2" required placeholder="Bijv. j_username">
-                </div>
-                <div class="form-group">
-                    <label for="passwordSelector2">Selector Wachtwoord (ID):</label>
-                    <input type="text" name="passwordSelector2" required placeholder="Bijv. j_password">
-                </div>
-                <div class="form-group">
-                    <label for="customerNumberRequired2">Klantnummer vereist?</label>
-                    <input type="checkbox" id="customerNumberRequired2" name="customerNumberRequired2" onchange="toggleCustomerNumberField(2)">
-                </div>
-                <div class="form-group" id="customerNumberField2" style="display:none;">
-                    <label for="customerNumberSelector2">Selector Klantnummer (ID):</label>
-                    <input type="text" name="customerNumberSelector2" placeholder="Bijv. customer_number">
+
+                <div class="supplier-section">
+                    <h3>Leverancier 2</h3>
+                    <div class="form-group">
+                        <label for="supplier2">Naam Leverancier:</label>
+                        <input type="text" name="supplier2" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="urlField2">Zoek URL Leverancier:</label>
+                        <input type="text" name="urlField2" required placeholder="https://leverancier2.com/search/{supplierCode}">
+                    </div>
+                    <div class="form-group">
+                        <label for="usernameSelector2">Selector Gebruikersnaam (ID):</label>
+                        <input type="text" name="usernameSelector2" required placeholder="Bijv. j_username">
+                    </div>
+                    <div class="form-group">
+                        <label for="passwordSelector2">Selector Wachtwoord (ID):</label>
+                        <input type="text" name="passwordSelector2" required placeholder="Bijv. j_password">
+                    </div>
+                    <div class="form-group">
+                        <label for="customerNumberRequired2">Klantnummer vereist?</label>
+                        <input type="checkbox" name="customerNumberRequired2" id="customerNumberRequired2">
+                    </div>
                 </div>
             </div>
 
-            <button type="submit">Uploaden en Verwerken</button>
+            <div class="submit-container">
+                <button type="submit">Uploaden en Verwerken</button>
+            </div>
         </form>
     </div>
 
     <script>
-        function toggleCustomerNumberField(supplierNumber) {
-            const field = document.getElementById('customerNumberField' + supplierNumber);
-            field.style.display = field.style.display === 'none' ? 'block' : 'none';
-        }
-
-        document.getElementById('fileInput').addEventListener('change', function() {
+        // Automatically scan columns when file is selected
+        document.querySelector('input[name="file"]').addEventListener('change', function() {
             const formData = new FormData();
             formData.append('file', this.files[0]);
 
@@ -110,16 +105,15 @@
             .then(response => response.json())
             .then(columns => {
                 const columnSelect = document.getElementById('column');
-                columnSelect.innerHTML = ''; // Verwijder eerdere opties
+                columnSelect.disabled = false;
+                columnSelect.innerHTML = ''; // Clear options
                 columns.forEach(col => {
                     const option = document.createElement('option');
                     option.value = col;
                     option.textContent = `Kolom ${col}`;
                     columnSelect.appendChild(option);
                 });
-                columnSelect.disabled = false; // Enable de dropdown
-            })
-            .catch(error => console.error('Error:', error));
+            });
         });
     </script>
 </body>
