@@ -7,38 +7,75 @@
     <link rel="stylesheet" href="/style.css">
 </head>
 <body>
+    <header class="header">
+        <div class="logo-container">
+            <img src="/images/catscraper.jpg" alt="Catscraper Logo" class="logo">
+            <h1>Catscraper</h1>
+        </div>
+    </header>
+
     <div class="container">
-        <img src="/images/catscraper.jpg" alt="Catscraper Logo" class="logo">
-        <h1>Catscraper</h1>
         <form action="/upload" method="POST" enctype="multipart/form-data">
-            <label for="file">Upload Excel-bestand:</label>
-            <input type="file" name="file" required><br><br>
+            <div class="form-group">
+                <label for="file">Upload Excel-bestand:</label>
+                <input type="file" name="file" required>
+            </div>
 
-            <label for="column">Kolom met Artikelnummers:</label>
-            <input type="number" name="column" required><br><br>
+            <div class="form-group">
+                <label for="column">Kies Kolom met Artikelnummers:</label>
+                <select name="column" id="column">
+                    <!-- Kolommen dynamisch inladen vanuit backend -->
+                    <option value="A">Kolom A</option>
+                    <option value="B">Kolom B</option>
+                    <option value="C">Kolom C</option>
+                    <!-- Meerdere opties hier -->
+                </select>
+            </div>
 
-            <label for="hasHeader">Heeft het bestand een koptekst?</label>
-            <input type="checkbox" name="hasHeader"><br><br>
+            <div class="form-group checkbox-container">
+                <label for="hasHeader">Bestand bevat koptekst</label>
+                <input type="checkbox" name="hasHeader" id="hasHeader">
+            </div>
 
             <h3>Leverancier 1</h3>
-            <label for="supplier1">Leverancier naam:</label>
-            <input type="text" name="supplier1" required><br>
-            <label for="urlField1">Zoek URL:</label>
-            <input type="text" name="urlField1" required><br>
-            <label for="loginFields1">Login velden (json formaat):</label>
-            <input type="text" name="loginFields1" placeholder='{"#username": "myusername", "#password": "mypassword"}'><br>
-            <label for="selector1">Selector veld (json formaat):</label>
-            <input type="text" name="selector1" placeholder='{"submitButton": "#submit", "outputField": ".output"}'><br>
+            <div class="supplier-section">
+                <div class="form-group">
+                    <label for="supplier1">Naam Leverancier:</label>
+                    <input type="text" name="supplier1" required>
+                </div>
+                <div class="form-group">
+                    <label for="urlField1">Zoek URL Leverancier:</label>
+                    <input type="text" name="urlField1" required placeholder="https://leverancier1.com/search/{articleNumber}">
+                </div>
+                <div class="form-group">
+                    <label for="login1">Gebruikersnaam:</label>
+                    <input type="text" name="login1" required>
+                </div>
+                <div class="form-group">
+                    <label for="password1">Wachtwoord:</label>
+                    <input type="password" name="password1" required>
+                </div>
+            </div>
 
             <h3>Leverancier 2</h3>
-            <label for="supplier2">Leverancier naam:</label>
-            <input type="text" name="supplier2" required><br>
-            <label for="urlField2">Zoek URL:</label>
-            <input type="text" name="urlField2" required><br>
-            <label for="loginFields2">Login velden (json formaat):</label>
-            <input type="text" name="loginFields2" placeholder='{"#username": "myusername", "#password": "mypassword"}'><br>
-            <label for="selector2">Selector veld (json formaat):</label>
-            <input type="text" name="selector2" placeholder='{"submitButton": "#submit", "outputField": ".output"}'><br><br>
+            <div class="supplier-section">
+                <div class="form-group">
+                    <label for="supplier2">Naam Leverancier:</label>
+                    <input type="text" name="supplier2" required>
+                </div>
+                <div class="form-group">
+                    <label for="urlField2">Zoek URL Leverancier:</label>
+                    <input type="text" name="urlField2" required placeholder="https://leverancier2.com/search/{supplierCode}">
+                </div>
+                <div class="form-group">
+                    <label for="login2">Gebruikersnaam:</label>
+                    <input type="text" name="login2" required>
+                </div>
+                <div class="form-group">
+                    <label for="password2">Wachtwoord:</label>
+                    <input type="password" name="password2" required>
+                </div>
+            </div>
 
             <button type="submit">Uploaden en Verwerken</button>
         </form>
