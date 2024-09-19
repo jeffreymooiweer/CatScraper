@@ -1,4 +1,4 @@
-/* General styles */
+/* Algemene stijlen */
 body {
     font-family: 'Segoe UI', sans-serif;
     background-color: #f9f9f9;
@@ -9,7 +9,7 @@ body {
 
 h1 {
     font-size: 2rem;
-    color: #34495e;
+    color: white;
 }
 
 .container {
@@ -23,7 +23,7 @@ h1 {
 
 .header {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     padding: 10px 20px;
     background-color: #2c3e50;
@@ -33,6 +33,7 @@ h1 {
 .logo-container {
     display: flex;
     align-items: center;
+    justify-content: center;
 }
 
 .logo {
@@ -54,20 +55,25 @@ form {
 }
 
 .form-group {
+    width: 100%;
+}
+
+.supplier-section {
     width: 48%;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 6px;
+    background-color: #f5f5f5;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
 }
 
 .checkbox-container {
     display: flex;
     align-items: center;
-}
-
-.supplier-section {
-    border: 1px solid #ccc;
-    padding: 10px;
-    width: 48%;
-    border-radius: 6px;
-    background-color: #f5f5f5;
 }
 
 .submit-container {
@@ -99,5 +105,9 @@ button:hover {
 
     .logo {
         width: 50px;
+    }
+
+    .header h1 {
+        font-size: 1.5rem;
     }
 }
