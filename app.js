@@ -48,10 +48,12 @@ app.post('/upload', upload.single('file'), async (req, res) => {
             supplier2,
             usernameSelector1,
             passwordSelector1,
+            customerNumber1,
             customerNumberRequired1,
             customerNumberSelector1,
             usernameSelector2,
             passwordSelector2,
+            customerNumber2,
             customerNumberRequired2,
             customerNumberSelector2,
             urlField1,
@@ -73,11 +75,11 @@ app.post('/upload', upload.single('file'), async (req, res) => {
 
             // Scraping voor Leverancier 1
             await page.goto(urlField1.replace('{articleNumber}', articleNumber));
-            await page.type(`#${usernameSelector1}`, 'your-username');
-            await page.type(`#${passwordSelector1}`, 'your-password');
+            await page.type(`#${usernameSelector1}`, req.body.username1);
+            await page.type(`#${passwordSelector1}`, req.body.password1);
 
-            if (customerNumberRequired1) {
-                await page.type(`#${customerNumberSelector1}`, 'your-customer-number');
+            if (customerNumberRequired1 === 'on') {
+                await page.type(`#${customerNumberSelector1}`, customerNumber1);
             }
 
             await page.click('button[type="submit"]');
@@ -86,11 +88,11 @@ app.post('/upload', upload.single('file'), async (req, res) => {
 
             // Scraping voor Leverancier 2
             await page.goto(urlField2.replace('{supplierCode}', supplierCode));
-            await page.type(`#${usernameSelector2}`, 'your-username');
-            await page.type(`#${passwordSelector2}`, 'your-password');
+            await page.type(`#${usernameSelector2}`, req.body.username2);
+            await page.type(`#${passwordSelector2}`, req.body.password2);
 
-            if (customerNumberRequired2) {
-                await page.type(`#${customerNumberSelector2}`, 'your-customer-number');
+            if (customerNumberRequired2 === 'on') {
+                await page.type(`#${customerNumberSelector2}`, customerNumber2);
             }
 
             await page.click('button[type="submit"]');
