@@ -1,3 +1,9 @@
+
+<p align="center">
+  <img src="https://github.com/jeffreymooiweer/CatScraper/blob/main/public/images/favicon.png?raw=true" alt="favicon" width="300"/>
+</p>
+
+
 # Catscraper
 
 Catscraper is a web scraping tool built using Node.js, Puppeteer, and Excel processing libraries. The application automates the process of scraping product information from two different suppliers, comparing the data, and updating an Excel file with the relevant product codes.
