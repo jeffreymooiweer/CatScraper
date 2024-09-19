@@ -15,18 +15,16 @@
     </header>
 
     <div class="container">
-        <form action="/upload" method="POST" enctype="multipart/form-data">
+        <form id="uploadForm" action="/upload" method="POST" enctype="multipart/form-data">
             <div class="form-group">
                 <label for="file">Upload Excel-bestand:</label>
-                <input type="file" name="file" required>
+                <input type="file" name="file" id="fileInput" required>
             </div>
 
             <div class="form-group">
                 <label for="column">Kies Kolom met Artikelnummers:</label>
-                <select name="column" id="column">
-                    <option value="A">Kolom A</option>
-                    <option value="B">Kolom B</option>
-                    <option value="C">Kolom C</option>
+                <select name="column" id="column" disabled>
+                    <!-- Kolommen worden dynamisch geladen na upload -->
                 </select>
             </div>
 
@@ -46,19 +44,19 @@
                     <input type="text" name="urlField1" required placeholder="https://leverancier1.com/search/{articleNumber}">
                 </div>
                 <div class="form-group">
-                    <label for="login1">Gebruikersnaam:</label>
-                    <input type="text" name="login1" required>
+                    <label for="usernameSelector1">Selector Gebruikersnaam (ID):</label>
+                    <input type="text" name="usernameSelector1" required placeholder="Bijv. j_username">
                 </div>
                 <div class="form-group">
-                    <label for="password1">Wachtwoord:</label>
-                    <input type="password" name="password1" required>
+                    <label for="passwordSelector1">Selector Wachtwoord (ID):</label>
+                    <input type="text" name="passwordSelector1" required placeholder="Bijv. j_password">
                 </div>
                 <div class="form-group">
                     <label for="customerNumberRequired1">Klantnummer vereist?</label>
                     <input type="checkbox" id="customerNumberRequired1" name="customerNumberRequired1" onchange="toggleCustomerNumberField(1)">
                 </div>
                 <div class="form-group" id="customerNumberField1" style="display:none;">
-                    <label for="customerNumberSelector1">Klantnummer Selector (ID):</label>
+                    <label for="customerNumberSelector1">Selector Klantnummer (ID):</label>
                     <input type="text" name="customerNumberSelector1" placeholder="Bijv. customer_number">
                 </div>
             </div>
@@ -74,19 +72,19 @@
                     <input type="text" name="urlField2" required placeholder="https://leverancier2.com/search/{supplierCode}">
                 </div>
                 <div class="form-group">
-                    <label for="login2">Gebruikersnaam:</label>
-                    <input type="text" name="login2" required>
+                    <label for="usernameSelector2">Selector Gebruikersnaam (ID):</label>
+                    <input type="text" name="usernameSelector2" required placeholder="Bijv. j_username">
                 </div>
                 <div class="form-group">
-                    <label for="password2">Wachtwoord:</label>
-                    <input type="password" name="password2" required>
+                    <label for="passwordSelector2">Selector Wachtwoord (ID):</label>
+                    <input type="text" name="passwordSelector2" required placeholder="Bijv. j_password">
                 </div>
                 <div class="form-group">
                     <label for="customerNumberRequired2">Klantnummer vereist?</label>
                     <input type="checkbox" id="customerNumberRequired2" name="customerNumberRequired2" onchange="toggleCustomerNumberField(2)">
                 </div>
                 <div class="form-group" id="customerNumberField2" style="display:none;">
-                    <label for="customerNumberSelector2">Klantnummer Selector (ID):</label>
+                    <label for="customerNumberSelector2">Selector Klantnummer (ID):</label>
                     <input type="text" name="customerNumberSelector2" placeholder="Bijv. customer_number">
                 </div>
             </div>
@@ -100,6 +98,29 @@
             const field = document.getElementById('customerNumberField' + supplierNumber);
             field.style.display = field.style.display === 'none' ? 'block' : 'none';
         }
+
+        document.getElementById('fileInput').addEventListener('change', function() {
+            const formData = new FormData();
+            formData.append('file', this.files[0]);
+
+            fetch('/scan-columns', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(columns => {
+                const columnSelect = document.getElementById('column');
+                columnSelect.innerHTML = ''; // Verwijder eerdere opties
+                columns.forEach(col => {
+                    const option = document.createElement('option');
+                    option.value = col;
+                    option.textContent = `Kolom ${col}`;
+                    columnSelect.appendChild(option);
+                });
+                columnSelect.disabled = false; // Enable de dropdown
+            })
+            .catch(error => console.error('Error:', error));
+        });
     </script>
 </body>
 </html>
