@@ -11,7 +11,34 @@
         <h1>Catscraper</h1>
         <form action="/upload" method="POST" enctype="multipart/form-data">
             <label for="file">Upload Excel-bestand:</label>
-            <input type="file" name="file" required>
+            <input type="file" name="file" required><br><br>
+
+            <label for="column">Kolom met Artikelnummers:</label>
+            <input type="number" name="column" required><br><br>
+
+            <label for="hasHeader">Heeft het bestand een koptekst?</label>
+            <input type="checkbox" name="hasHeader"><br><br>
+
+            <h3>Leverancier 1</h3>
+            <label for="supplier1">Leverancier naam:</label>
+            <input type="text" name="supplier1" required><br>
+            <label for="urlField1">Zoek URL:</label>
+            <input type="text" name="urlField1" required><br>
+            <label for="loginFields1">Login velden (json formaat):</label>
+            <input type="text" name="loginFields1" placeholder='{"#username": "myusername", "#password": "mypassword"}'><br>
+            <label for="selector1">Selector veld (json formaat):</label>
+            <input type="text" name="selector1" placeholder='{"submitButton": "#submit", "outputField": ".output"}'><br>
+
+            <h3>Leverancier 2</h3>
+            <label for="supplier2">Leverancier naam:</label>
+            <input type="text" name="supplier2" required><br>
+            <label for="urlField2">Zoek URL:</label>
+            <input type="text" name="urlField2" required><br>
+            <label for="loginFields2">Login velden (json formaat):</label>
+            <input type="text" name="loginFields2" placeholder='{"#username": "myusername", "#password": "mypassword"}'><br>
+            <label for="selector2">Selector veld (json formaat):</label>
+            <input type="text" name="selector2" placeholder='{"submitButton": "#submit", "outputField": ".output"}'><br><br>
+
             <button type="submit">Uploaden en Verwerken</button>
         </form>
     </div>
