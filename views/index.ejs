@@ -15,10 +15,10 @@
     </header>
 
     <div class="container">
-        <form id="uploadForm" method="POST" enctype="multipart/form-data">
+        <form action="/upload" method="POST" enctype="multipart/form-data">
             <div class="form-group">
                 <label for="file">Upload Excel-bestand:</label>
-                <input type="file" name="file" id="fileInput" required>
+                <input type="file" name="file" id="file" required>
             </div>
 
             <div class="form-group">
@@ -34,15 +34,87 @@
             <!-- Leverancier 1 -->
             <h3>Leverancier 1</h3>
             <div class="supplier-section">
-                <!-- Leverancier 1 Fields -->
-                <!-- ... Voeg de velden van Leverancier 1 toe zoals in het vorige voorbeeld ... -->
+                <div class="form-group">
+                    <label for="supplier1">Naam Leverancier:</label>
+                    <input type="text" name="supplier1" required>
+                </div>
+                <div class="form-group">
+                    <label for="urlField1">Zoek URL Leverancier:</label>
+                    <input type="text" name="urlField1" required placeholder="https://leverancier1.com/search/{articleNumber}">
+                </div>
+                <div class="form-group">
+                    <label for="usernameSelector1">Selector Gebruikersnaam (ID):</label>
+                    <input type="text" name="usernameSelector1" required placeholder="Bijv. j_username">
+                </div>
+                <div class="form-group">
+                    <label for="username1">Gebruikersnaam:</label>
+                    <input type="text" name="username1" required>
+                </div>
+                <div class="form-group">
+                    <label for="passwordSelector1">Selector Wachtwoord (ID):</label>
+                    <input type="text" name="passwordSelector1" required placeholder="Bijv. j_password">
+                </div>
+                <div class="form-group">
+                    <label for="password1">Wachtwoord:</label>
+                    <input type="password" name="password1" required>
+                </div>
+                <div class="form-group checkbox-container">
+                    <label for="customerNumberRequired1">Klantnummer vereist?</label>
+                    <input type="checkbox" name="customerNumberRequired1" id="customerNumberRequired1" onchange="toggleCustomerNumber1()">
+                </div>
+                <div id="customerNumber1Section" style="display:none;">
+                    <div class="form-group">
+                        <label for="customerNumberSelector1">Selector Klantnummer (ID):</label>
+                        <input type="text" name="customerNumberSelector1" placeholder="Bijv. customerNumber">
+                    </div>
+                    <div class="form-group">
+                        <label for="customerNumber1">Klantnummer:</label>
+                        <input type="text" name="customerNumber1">
+                    </div>
+                </div>
             </div>
 
             <!-- Leverancier 2 -->
             <h3>Leverancier 2</h3>
             <div class="supplier-section">
-                <!-- Leverancier 2 Fields -->
-                <!-- ... Voeg de velden van Leverancier 2 toe zoals in het vorige voorbeeld ... -->
+                <div class="form-group">
+                    <label for="supplier2">Naam Leverancier:</label>
+                    <input type="text" name="supplier2" required>
+                </div>
+                <div class="form-group">
+                    <label for="urlField2">Zoek URL Leverancier:</label>
+                    <input type="text" name="urlField2" required placeholder="https://leverancier2.com/search/{supplierCode}">
+                </div>
+                <div class="form-group">
+                    <label for="usernameSelector2">Selector Gebruikersnaam (ID):</label>
+                    <input type="text" name="usernameSelector2" required placeholder="Bijv. j_username">
+                </div>
+                <div class="form-group">
+                    <label for="username2">Gebruikersnaam:</label>
+                    <input type="text" name="username2" required>
+                </div>
+                <div class="form-group">
+                    <label for="passwordSelector2">Selector Wachtwoord (ID):</label>
+                    <input type="text" name="passwordSelector2" required placeholder="Bijv. j_password">
+                </div>
+                <div class="form-group">
+                    <label for="password2">Wachtwoord:</label>
+                    <input type="password" name="password2" required>
+                </div>
+                <div class="form-group checkbox-container">
+                    <label for="customerNumberRequired2">Klantnummer vereist?</label>
+                    <input type="checkbox" name="customerNumberRequired2" id="customerNumberRequired2" onchange="toggleCustomerNumber2()">
+                </div>
+                <div id="customerNumber2Section" style="display:none;">
+                    <div class="form-group">
+                        <label for="customerNumberSelector2">Selector Klantnummer (ID):</label>
+                        <input type="text" name="customerNumberSelector2" placeholder="Bijv. customerNumber">
+                    </div>
+                    <div class="form-group">
+                        <label for="customerNumber2">Klantnummer:</label>
+                        <input type="text" name="customerNumber2">
+                    </div>
+                </div>
             </div>
 
             <button type="submit">Uploaden en Verwerken</button>
@@ -50,32 +122,6 @@
     </div>
 
     <script>
-        document.getElementById('fileInput').addEventListener('change', function () {
-            const fileInput = document.getElementById('fileInput');
-            const columnDropdown = document.getElementById('column');
-            const formData = new FormData();
-            formData.append('file', fileInput.files[0]);
-
-            fetch('/scan-columns', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(columns => {
-                columnDropdown.innerHTML = ''; // Leeg de dropdown eerst
-                columns.forEach(col => {
-                    const option = document.createElement('option');
-                    option.value = col;
-                    option.textContent = `Kolom ${col}`;
-                    columnDropdown.appendChild(option);
-                });
-                columnDropdown.disabled = false; // Zet de dropdown aan zodra kolommen zijn geladen
-            })
-            .catch(error => {
-                console.error('Fout bij het scannen van kolommen:', error);
-            });
-        });
-
         function toggleCustomerNumber1() {
             const section = document.getElementById('customerNumber1Section');
             section.style.display = section.style.display === 'none' ? 'block' : 'none';
@@ -85,6 +131,29 @@
             const section = document.getElementById('customerNumber2Section');
             section.style.display = section.style.display === 'none' ? 'block' : 'none';
         }
+
+        document.getElementById('file').addEventListener('change', async function () {
+            const formData = new FormData();
+            formData.append('file', this.files[0]);
+
+            const response = await fetch('/scan-columns', {
+                method: 'POST',
+                body: formData,
+            });
+
+            const columns = await response.json();
+            const columnSelect = document.getElementById('column');
+
+            columnSelect.innerHTML = '';
+            columns.forEach(column => {
+                const option = document.createElement('option');
+                option.value = column;
+                option.textContent = `Kolom ${column}`;
+                columnSelect.appendChild(option);
+            });
+
+            columnSelect.disabled = false; // Enable dropdown after columns are loaded
+        });
     </script>
 </body>
 </html>
