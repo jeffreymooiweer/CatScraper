@@ -1,76 +1,63 @@
 # Catscraper
 
-**Catscraper** is een Node.js-gebaseerde webapplicatie die gegevens verzamelt van twee leveranciers: **Technische Unie** en **It's Me**. De applicatie voert webscraping uit om artikelgegevens te synchroniseren tussen de twee leveranciers.
+Catscraper is a web scraping tool built using Node.js, Puppeteer, and Excel processing libraries. The application automates the process of scraping product information from two different suppliers, comparing the data, and updating an Excel file with the relevant product codes.
 
-## Functies:
-- Upload een Excel-bestand met artikelnummers.
-- Scraping van gegevens van de Technische Unie en It’s Me.
-- Synchronisatie van artikelinformatie tussen beide leveranciers.
-- Download het bijgewerkte Excel-bestand.
+## Features
 
-## Vereisten:
-- **Node.js** v14+
-- **Docker** (optioneel, voor gebruik in containers)
-- **Puppeteer** voor webscraping
-- **Express.js** voor serverbeheer
-- **Multer** voor bestandsuploads
-- **xlsx** voor Excel-verwerking
+- Upload an Excel file containing article numbers.
+- Scrape product data from two suppliers based on input.
+- Handle login forms and search functionality with dynamic selectors.
+- Process the returned data and update the Excel file with new product codes.
+- Download the updated Excel file.
+- Customizable login and search fields for each supplier.
+  
+## Requirements
 
-## Installatie:
+- Node.js
+- Puppeteer
+- Excel processing libraries (xlsx)
+  
+## Installation
 
-1. Clone de repository:
+1. Clone this repository:
+   ```bash
+   git clone https://github.com/yourusername/catscraper.git
+   cd catscraper
+   ```
 
-    ```bash
-    git clone https://github.com/jeffreymooiweer/catscraper.git
-    cd catscraper
-    ```
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-2. Installeer de benodigde pakketten:
+3. Run the application:
+   ```bash
+   npm start
+   ```
 
-    ```bash
-    npm install
-    ```
+## Usage
 
-3. Start de applicatie:
+1. Open the application in your browser at `http://localhost:5000`.
+2. Upload an Excel file with article numbers.
+3. Configure supplier login information, search URLs, and field selectors.
+4. Download the updated Excel file with new product data.
 
-    ```bash
-    npm start
-    ```
+## Configuration
 
-4. Bezoek de applicatie op:
+- **Login URL**: The URL where the supplier login page is located.
+- **Search URL**: The URL used for searching products by article number.
+- **Selectors**: Specify the HTML element IDs for login fields, password fields, and search fields.
+- **Customer Number**: Optional field if required by the supplier.
 
-    ```
-    http://localhost:5000
-    ```
+## Example
 
-## Docker-gebruik:
+1. Upload an Excel file with article numbers.
+2. Fill in the login URLs, search URLs, and selectors for both suppliers.
+3. Click "Uploaden en Verwerken" to start the scraping process.
+4. Download the updated Excel file with new product codes.
 
-1. Bouw het Docker-image:
+## License
 
-    ```bash
-    docker build -t catscraper .
-    ```
+This project is licensed under the MIT License.
 
-2. Start de container:
 
-    ```bash
-    docker run -p 5000:5000 catscraper
-    ```
-
-3. Bezoek de applicatie op:
-
-    ```
-    http://localhost:5000
-    ```
-
-## GitHub Actions:
-
-Er is een GitHub Actions workflow ingesteld om het Docker-image te bouwen en naar Docker Hub te pushen. Controleer de **`docker-image.yml`** in de `.github/workflows` map.
-
-## Bijdragen:
-
-Voel je vrij om bij te dragen aan dit project. Maak een pull request aan en leg uit welke verbeteringen je hebt aangebracht!
-
-## Licentie:
-
-Dit project is gelicenseerd onder de MIT-licentie - zie het **LICENSE** bestand voor details.
