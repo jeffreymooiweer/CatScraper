@@ -16,105 +16,121 @@
 
     <div class="container">
         <form action="/upload" method="POST" enctype="multipart/form-data">
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="file">Upload Excel-bestand:</label>
-                    <input type="file" name="file" required>
-                </div>
+            <div class="form-group">
+                <label for="file">Upload Excel-bestand:</label>
+                <input type="file" name="file" required>
+            </div>
 
-                <div class="form-group">
-                    <label for="column">Kies Kolom met Artikelnummers:</label>
-                    <select name="column" id="column" disabled>
-                        <!-- Kolommen dynamisch inladen vanuit backend -->
-                        <option value="">Kolommen laden...</option>
-                    </select>
-                </div>
+            <div class="form-group">
+                <label for="column">Kies Kolom met Artikelnummers:</label>
+                <select name="column" id="column"></select>
+            </div>
 
+            <div class="form-group checkbox-container">
+                <label for="hasHeader">Bestand bevat koptekst</label>
+                <input type="checkbox" name="hasHeader" id="hasHeader">
+            </div>
+
+            <!-- Leverancier 1 -->
+            <h3>Leverancier 1</h3>
+            <div class="supplier-section">
+                <div class="form-group">
+                    <label for="supplier1">Naam Leverancier:</label>
+                    <input type="text" name="supplier1" required>
+                </div>
+                <div class="form-group">
+                    <label for="urlField1">Zoek URL Leverancier:</label>
+                    <input type="text" name="urlField1" required placeholder="https://leverancier1.com/search/{articleNumber}">
+                </div>
+                <div class="form-group">
+                    <label for="usernameSelector1">Selector Gebruikersnaam (ID):</label>
+                    <input type="text" name="usernameSelector1" required placeholder="Bijv. j_username">
+                </div>
+                <div class="form-group">
+                    <label for="username1">Gebruikersnaam:</label>
+                    <input type="text" name="username1" required>
+                </div>
+                <div class="form-group">
+                    <label for="passwordSelector1">Selector Wachtwoord (ID):</label>
+                    <input type="text" name="passwordSelector1" required placeholder="Bijv. j_password">
+                </div>
+                <div class="form-group">
+                    <label for="password1">Wachtwoord:</label>
+                    <input type="password" name="password1" required>
+                </div>
                 <div class="form-group checkbox-container">
-                    <label for="hasHeader">Bestand bevat koptekst</label>
-                    <input type="checkbox" name="hasHeader" id="hasHeader">
+                    <label for="customerNumberRequired1">Klantnummer vereist?</label>
+                    <input type="checkbox" name="customerNumberRequired1" id="customerNumberRequired1" onchange="toggleCustomerNumber1()">
                 </div>
-            </div>
-
-            <div class="suppliers-row">
-                <div class="supplier-section">
-                    <h3>Leverancier 1</h3>
+                <div id="customerNumber1Section" style="display:none;">
                     <div class="form-group">
-                        <label for="supplier1">Naam Leverancier:</label>
-                        <input type="text" name="supplier1" required>
+                        <label for="customerNumberSelector1">Selector Klantnummer (ID):</label>
+                        <input type="text" name="customerNumberSelector1" placeholder="Bijv. customerNumber">
                     </div>
                     <div class="form-group">
-                        <label for="urlField1">Zoek URL Leverancier:</label>
-                        <input type="text" name="urlField1" required placeholder="https://leverancier1.com/search/{articleNumber}">
-                    </div>
-                    <div class="form-group">
-                        <label for="usernameSelector1">Selector Gebruikersnaam (ID):</label>
-                        <input type="text" name="usernameSelector1" required placeholder="Bijv. j_username">
-                    </div>
-                    <div class="form-group">
-                        <label for="passwordSelector1">Selector Wachtwoord (ID):</label>
-                        <input type="text" name="passwordSelector1" required placeholder="Bijv. j_password">
-                    </div>
-                    <div class="form-group">
-                        <label for="customerNumberRequired1">Klantnummer vereist?</label>
-                        <input type="checkbox" name="customerNumberRequired1" id="customerNumberRequired1">
-                    </div>
-                </div>
-
-                <div class="supplier-section">
-                    <h3>Leverancier 2</h3>
-                    <div class="form-group">
-                        <label for="supplier2">Naam Leverancier:</label>
-                        <input type="text" name="supplier2" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="urlField2">Zoek URL Leverancier:</label>
-                        <input type="text" name="urlField2" required placeholder="https://leverancier2.com/search/{supplierCode}">
-                    </div>
-                    <div class="form-group">
-                        <label for="usernameSelector2">Selector Gebruikersnaam (ID):</label>
-                        <input type="text" name="usernameSelector2" required placeholder="Bijv. j_username">
-                    </div>
-                    <div class="form-group">
-                        <label for="passwordSelector2">Selector Wachtwoord (ID):</label>
-                        <input type="text" name="passwordSelector2" required placeholder="Bijv. j_password">
-                    </div>
-                    <div class="form-group">
-                        <label for="customerNumberRequired2">Klantnummer vereist?</label>
-                        <input type="checkbox" name="customerNumberRequired2" id="customerNumberRequired2">
+                        <label for="customerNumber1">Klantnummer:</label>
+                        <input type="text" name="customerNumber1">
                     </div>
                 </div>
             </div>
 
-            <div class="submit-container">
-                <button type="submit">Uploaden en Verwerken</button>
+            <!-- Leverancier 2 -->
+            <h3>Leverancier 2</h3>
+            <div class="supplier-section">
+                <div class="form-group">
+                    <label for="supplier2">Naam Leverancier:</label>
+                    <input type="text" name="supplier2" required>
+                </div>
+                <div class="form-group">
+                    <label for="urlField2">Zoek URL Leverancier:</label>
+                    <input type="text" name="urlField2" required placeholder="https://leverancier2.com/search/{supplierCode}">
+                </div>
+                <div class="form-group">
+                    <label for="usernameSelector2">Selector Gebruikersnaam (ID):</label>
+                    <input type="text" name="usernameSelector2" required placeholder="Bijv. j_username">
+                </div>
+                <div class="form-group">
+                    <label for="username2">Gebruikersnaam:</label>
+                    <input type="text" name="username2" required>
+                </div>
+                <div class="form-group">
+                    <label for="passwordSelector2">Selector Wachtwoord (ID):</label>
+                    <input type="text" name="passwordSelector2" required placeholder="Bijv. j_password">
+                </div>
+                <div class="form-group">
+                    <label for="password2">Wachtwoord:</label>
+                    <input type="password" name="password2" required>
+                </div>
+                <div class="form-group checkbox-container">
+                    <label for="customerNumberRequired2">Klantnummer vereist?</label>
+                    <input type="checkbox" name="customerNumberRequired2" id="customerNumberRequired2" onchange="toggleCustomerNumber2()">
+                </div>
+                <div id="customerNumber2Section" style="display:none;">
+                    <div class="form-group">
+                        <label for="customerNumberSelector2">Selector Klantnummer (ID):</label>
+                        <input type="text" name="customerNumberSelector2" placeholder="Bijv. customerNumber">
+                    </div>
+                    <div class="form-group">
+                        <label for="customerNumber2">Klantnummer:</label>
+                        <input type="text" name="customerNumber2">
+                    </div>
+                </div>
             </div>
+
+            <button type="submit">Uploaden en Verwerken</button>
         </form>
     </div>
 
     <script>
-        // Automatically scan columns when file is selected
-        document.querySelector('input[name="file"]').addEventListener('change', function() {
-            const formData = new FormData();
-            formData.append('file', this.files[0]);
+        function toggleCustomerNumber1() {
+            const section = document.getElementById('customerNumber1Section');
+            section.style.display = section.style.display === 'none' ? 'block' : 'none';
+        }
 
-            fetch('/scan-columns', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(columns => {
-                const columnSelect = document.getElementById('column');
-                columnSelect.disabled = false;
-                columnSelect.innerHTML = ''; // Clear options
-                columns.forEach(col => {
-                    const option = document.createElement('option');
-                    option.value = col;
-                    option.textContent = `Kolom ${col}`;
-                    columnSelect.appendChild(option);
-                });
-            });
-        });
+        function toggleCustomerNumber2() {
+            const section = document.getElementById('customerNumber2Section');
+            section.style.display = section.style.display === 'none' ? 'block' : 'none';
+        }
     </script>
 </body>
 </html>
