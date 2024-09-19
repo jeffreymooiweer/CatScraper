@@ -16,29 +16,28 @@ app.get('/', (req, res) => {
     res.render('index');
 });
 
-// Route to scan columns from the uploaded Excel file
+// Route om kolommen te scannen van het geüploade Excel-bestand
 app.post('/scan-columns', upload.single('file'), (req, res) => {
     try {
         const filePath = req.file.path;
         const workbook = xlsx.readFile(filePath);
         const sheet = workbook.Sheets[workbook.SheetNames[0]];
-        const firstRow = xlsx.utils.sheet_to_json(sheet, { header: 1 })[0];
-
+        const range = xlsx.utils.decode_range(sheet['!ref']); // Het bereik van de kolommen bepalen
         const columns = [];
-        firstRow.forEach((col, index) => {
-            if (col) {
-                columns.push(String.fromCharCode(65 + index)); // Convert to A, B, C...
-            }
-        });
 
-        res.json(columns);
+        for (let i = range.s.c; i <= range.e.c; i++) {
+            const letter = String.fromCharCode(65 + i); // Converteer naar A, B, C, ...
+            columns.push(letter);
+        }
+
+        res.json(columns); // Stuur de gedetecteerde kolommen terug naar de frontend
     } catch (error) {
         console.error(error);
-        res.status(500).send('Error scanning columns');
+        res.status(500).send('Fout bij het scannen van kolommen');
     }
 });
 
-// Upload route
+// Upload route voor verwerking
 app.post('/upload', upload.single('file'), async (req, res) => {
     try {
         const filePath = req.file.path;
@@ -58,7 +57,7 @@ app.post('/upload', upload.single('file'), async (req, res) => {
             urlField1,
             urlField2
         } = req.body;
-        
+
         const workbook = xlsx.readFile(filePath);
         const sheet = workbook.Sheets[workbook.SheetNames[0]];
         const data = xlsx.utils.sheet_to_json(sheet, { header: hasHeader ? 1 : undefined });
@@ -68,11 +67,11 @@ app.post('/upload', upload.single('file'), async (req, res) => {
         });
         const page = await browser.newPage();
 
-        // Loop through rows of the Excel sheet
+        // Loop door de rijen van de Excel-sheet
         for (let i = hasHeader ? 1 : 0; i < data.length; i++) {
             const articleNumber = data[i][column];
 
-            // Supplier 1 scraping
+            // Scraping voor Leverancier 1
             await page.goto(urlField1.replace('{articleNumber}', articleNumber));
             await page.type(`#${usernameSelector1}`, 'your-username');
             await page.type(`#${passwordSelector1}`, 'your-password');
@@ -85,7 +84,7 @@ app.post('/upload', upload.single('file'), async (req, res) => {
             await page.waitForSelector('selector1-output');
             const supplierCode = await page.$eval('selector1-output', el => el.innerText);
 
-            // Supplier 2 scraping
+            // Scraping voor Leverancier 2
             await page.goto(urlField2.replace('{supplierCode}', supplierCode));
             await page.type(`#${usernameSelector2}`, 'your-username');
             await page.type(`#${passwordSelector2}`, 'your-password');
@@ -98,13 +97,13 @@ app.post('/upload', upload.single('file'), async (req, res) => {
             await page.waitForSelector('selector2-output');
             const itsMeArticleNumber = await page.$eval('selector2-output', el => el.innerText);
 
-            // Update Excel column with new article number
+            // Update Excel-kolom met nieuw artikelnummer
             data[i][column] = itsMeArticleNumber;
         }
 
         await browser.close();
 
-        // Save the updated Excel file
+        // Sla het bijgewerkte Excel-bestand op
         const newSheet = xlsx.utils.json_to_sheet(data);
         const newWorkbook = xlsx.utils.book_new();
         xlsx.utils.book_append_sheet(newWorkbook, newSheet, 'Updated');
@@ -114,12 +113,12 @@ app.post('/upload', upload.single('file'), async (req, res) => {
         res.download(outputFilename);
     } catch (error) {
         console.error(error);
-        res.status(500).send('Error processing the file');
+        res.status(500).send('Fout bij de verwerking');
     }
 });
 
-// Start the server
+// Start de server
 const port = process.env.PORT || 5000;
 app.listen(port, () => {
-    console.log(`Server running on http://localhost:${port}`);
+    console.log(`Server draait op http://localhost:${port}`);
 });
