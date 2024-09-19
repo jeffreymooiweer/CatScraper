@@ -27,7 +27,7 @@ Catscraper is a web scraping tool built using Node.js, Puppeteer, and Excel proc
 
 1. Clone this repository:
    ```bash
-   git clone https://github.com/yourusername/catscraper.git
+   git clone https://github.com/jeffreymooiweer/catscraper.git
    cd catscraper
    ```
 
