@@ -25,38 +25,41 @@ app.post('/upload', upload.single('file'), async (req, res) => {
         const sheet = workbook.Sheets[workbook.SheetNames[0]];
         const data = xlsx.utils.sheet_to_json(sheet, { header: hasHeader ? 1 : undefined });
 
-        const browser = await puppeteer.launch();
+        // Puppeteer launch with no-sandbox
+        const browser = await puppeteer.launch({
+            args: ['--no-sandbox', '--disable-setuid-sandbox']
+        });
         const page = await browser.newPage();
 
-        // Loop door de rijen van de Excel sheet
+        // Loop through the rows of the Excel sheet
         for (let i = hasHeader ? 1 : 0; i < data.length; i++) {
             const articleNumber = data[i][column];
 
-            // Leverancier 1 scraping
+            // Supplier 1 scraping
             await page.goto(urlField1.replace('{articleNumber}', articleNumber));
             for (const [field, value] of Object.entries(loginFields1)) {
                 await page.type(field, value);
             }
-            await page.click(selector1.submitButton); // Klik op login button
-            await page.waitForSelector(selector1.outputField); // Wacht op output
-            const supplierCode = await page.$eval(selector1.outputField, el => el.innerText); // Vervang selector
+            await page.click(selector1.submitButton);
+            await page.waitForSelector(selector1.outputField);
+            const supplierCode = await page.$eval(selector1.outputField, el => el.innerText);
 
-            // Leverancier 2 scraping
+            // Supplier 2 scraping
             await page.goto(urlField2.replace('{supplierCode}', supplierCode));
             for (const [field, value] of Object.entries(loginFields2)) {
                 await page.type(field, value);
             }
             await page.click(selector2.submitButton);
             await page.waitForSelector(selector2.outputField);
-            const itsMeArticleNumber = await page.$eval(selector2.outputField, el => el.innerText); // Vervang selector
+            const itsMeArticleNumber = await page.$eval(selector2.outputField, el => el.innerText);
 
-            // Update Excel kolom met het nieuwe artikelnummer
+            // Update Excel column with new article number
             data[i][column] = itsMeArticleNumber;
         }
 
         await browser.close();
 
-        // Sla het gewijzigde Excel-bestand op
+        // Save the updated Excel file
         const newSheet = xlsx.utils.json_to_sheet(data);
         const newWorkbook = xlsx.utils.book_new();
         xlsx.utils.book_append_sheet(newWorkbook, newSheet, 'Updated');
@@ -70,7 +73,7 @@ app.post('/upload', upload.single('file'), async (req, res) => {
     }
 });
 
-// Start de server
+// Start the server
 const port = process.env.PORT || 5000;
 app.listen(port, () => {
     console.log(`Server running on http://localhost:${port}`);
