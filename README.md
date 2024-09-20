@@ -8,6 +8,7 @@
 ![License](https://img.shields.io/badge/License-MIT-blue.svg)
 ![Docker Image Size](https://img.shields.io/docker/image-size/jeffersonmouze/catscraper/latest)
 ![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/jeffreymooiweer/catscraper/docker-image.yml?branch=main)
+![Development](https://img.shields.io/badge/status-Development-orange.svg)
 
 CatScraper is a robust Node.js web scraping application designed to extract and process data from suppliers such as Technische Unie and It's Me. Leveraging powerful tools like Puppeteer and Excel file manipulation, CatScraper automates data extraction, transformation, and delivery, ensuring efficiency and accuracy.
 
