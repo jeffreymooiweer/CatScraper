@@ -1,24 +1,41 @@
 /* Algemene stijlen */
+
+/* CSS-variabelen voor consistente kleuren */
+:root {
+    --primary-color: #2c3e50;
+    --secondary-color: #27ae60;
+    --secondary-hover-color: #2ecc71;
+    --background-color: #f9f9f9;
+    --container-bg-color: #ffffff;
+    --supplier-bg-color: #f5f5f5;
+    --text-color: #333333;
+    --header-text-color: #ffffff;
+    --border-color: #cccccc;
+    --box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    --font-family: 'Segoe UI', sans-serif;
+}
+
 body {
-    font-family: 'Segoe UI', sans-serif;
-    background-color: #f9f9f9;
+    font-family: var(--font-family);
+    background-color: var(--background-color);
     margin: 0;
     padding: 0;
-    color: #333;
+    color: var(--text-color);
 }
 
 h1 {
     font-size: 2rem;
-    color: white;
+    color: var(--header-text-color);
+    margin: 0;
 }
 
 .container {
     max-width: 1000px;
     margin: 30px auto;
     padding: 20px;
-    background-color: white;
+    background-color: var(--container-bg-color);
     border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    box-shadow: var(--box-shadow);
 }
 
 .header {
@@ -26,8 +43,8 @@ h1 {
     justify-content: center;
     align-items: center;
     padding: 10px 20px;
-    background-color: #2c3e50;
-    color: white;
+    background-color: var(--primary-color);
+    color: var(--header-text-color);
 }
 
 .logo-container {
@@ -48,27 +65,22 @@ form {
     gap: 20px;
 }
 
-.form-row, .suppliers-row {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-}
-
 .form-group {
     width: 100%;
 }
 
 .supplier-section {
     width: 48%;
-    border: 1px solid #ccc;
-    padding: 10px;
+    border: 1px solid var(--border-color);
+    padding: 15px;
     border-radius: 6px;
-    background-color: #f5f5f5;
+    background-color: var(--supplier-bg-color);
 }
 
 .form-group label {
     display: block;
     margin-bottom: 5px;
+    font-weight: bold;
 }
 
 .checkbox-container {
@@ -76,15 +88,13 @@ form {
     align-items: center;
 }
 
-.submit-container {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 20px;
+.checkbox-container input {
+    margin-left: 10px;
 }
 
 button {
-    background-color: #27ae60;
-    color: white;
+    background-color: var(--secondary-color);
+    color: var(--header-text-color);
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
@@ -93,21 +103,36 @@ button {
     transition: background-color 0.3s;
 }
 
-button:hover {
-    background-color: #2ecc71;
+button:hover,
+button:focus {
+    background-color: var(--secondary-hover-color);
+    outline: none;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-    .form-group, .supplier-section {
+@media (max-width: 1024px) {
+    .supplier-section {
         width: 100%;
     }
+}
 
+@media (max-width: 768px) {
     .logo {
         width: 50px;
     }
 
-    .header h1 {
+    h1 {
         font-size: 1.5rem;
     }
+
+    button {
+        width: 100%;
+    }
+}
+
+/* Focus styles for accessibility */
+input:focus,
+select:focus,
+button:focus {
+    outline: 2px solid var(--secondary-hover-color);
+    outline-offset: 2px;
 }
