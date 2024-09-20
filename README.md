@@ -54,8 +54,9 @@ CatScraper is a robust Node.js web scraping application designed to extract and 
 
 2. Install Dependencies
 
+```bash
 npm install
-
+```
 
 3. Set Up Environment Variables
 
