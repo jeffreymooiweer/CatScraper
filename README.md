@@ -193,7 +193,8 @@ CatScraper can be easily containerized using Docker, ensuring consistency across
   - Input Validation: Ensures only Excel files are accepted for upload.
   
   **Environment Variables**
-  Sensitive information, such as Docker credentials and application settings, are managed through environment variables defined in the .env file.
+  
+Sensitive information, such as Docker credentials and application settings, are managed through environment variables defined in the .env file.
 
 ## Contributing
 
