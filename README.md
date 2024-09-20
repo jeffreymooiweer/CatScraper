@@ -58,16 +58,16 @@ CatScraper is a robust Node.js web scraping application designed to extract and 
 
 3. **Set Up Environment Variables**
 
-    Create a .env file in the root directory:
+    Create a `.env` file in the root directory:
 
         touch .env
 
-    Populate .env with the following variables:
+    Populate `.env` with the following variables:
 
         PORT=5000
         DOCKER_USERNAME=your_dockerhub_username
         DOCKER_PASSWORD=your_dockerhub_password
-   Note: Ensure that .env is added to .gitignore to prevent sensitive information from being exposed.
+   Note: Ensure that `.env` is added to `.gitignore` to prevent sensitive information from being exposed.
 
 4. **Start the Application**
 
@@ -78,7 +78,7 @@ CatScraper is a robust Node.js web scraping application designed to extract and 
 
 5. **Access the Application**
 
-    Open your browser and navigate to http://localhost:5000.
+    Open your browser and navigate to `http://localhost:5000`
 
 
 ## Configuration
@@ -97,7 +97,7 @@ CatScraper requires specific configurations to interact with supplier websites. 
 
 1. **Upload Excel File**
   - Navigate to the homepage.
-  - Click on the "Upload Excel-bestand" button to select your .xlsx or .xls file.
+  - Click on the "Upload Excel-bestand" button to select your `.xlsx` or `.xls` file.
   - The application will automatically scan and populate the column selection dropdown.
 
 2. **Configure Supplier Details**
@@ -136,7 +136,7 @@ CatScraper can be easily containerized using Docker, ensuring consistency across
   CatScraper uses GitHub Actions for automated building and pushing of Docker images.
 
   **Workflow Configuration**
-  The CI workflow is defined in .github/workflows/docker-image.yml and triggers on pushes and pull requests to the main branch. It performs the following steps:
+  The CI workflow is defined in `.github/workflows/docker-image.yml` and triggers on pushes and pull requests to the main branch. It performs the following steps:
 
   1. Checkout Code: Retrieves the repository code.
   2. Set Up Docker Buildx: Prepares Docker for building multi-platform images.
@@ -148,8 +148,8 @@ CatScraper can be easily containerized using Docker, ensuring consistency across
   **Secrets Management**
   Ensure the following secrets are set in your GitHub repository:
 
-  DOCKER_USERNAME: Your Docker Hub username.
-  DOCKER_PASSWORD: Your Docker Hub password.
+  `DOCKER_USERNAME:` Your Docker Hub username.
+  `DOCKER_PASSWORD:` Your Docker Hub password.
 
 ## Testing
 
@@ -183,7 +183,7 @@ CatScraper can be easily containerized using Docker, ensuring consistency across
   - Levels: info, warn, error
   - Transports:
     - Console: For real-time logging.
-    -   File: Logs are saved to app.log for persistent storage.
+    -   File: Logs are saved to `app.log` for persistent storage.
 
 ## Security
   
