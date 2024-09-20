@@ -1,5 +1,6 @@
 // app.js
 
+require('dotenv').config(); // Voeg dit toe voor het gebruik van .env variabelen
 const express = require('express');
 const multer = require('multer');
 const xlsx = require('xlsx');
@@ -9,9 +10,25 @@ const fs = require('fs');
 const ejs = require('ejs');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
+const winston = require('winston');
 
 // Initialiseer Express-app
 const app = express();
+
+// Configuratie van winston logger
+const logger = winston.createLogger({
+    level: 'info',
+    format: winston.format.combine(
+        winston.format.timestamp(),
+        winston.format.printf(({ timestamp, level, message }) => {
+            return `${timestamp} [${level.toUpperCase()}]: ${message}`;
+        })
+    ),
+    transports: [
+        new winston.transports.Console(),
+        new winston.transports.File({ filename: 'app.log' })
+    ]
+});
 
 // Middleware beveiliging
 app.use(helmet());
@@ -24,9 +41,14 @@ const limiter = rateLimit({
 });
 app.use(limiter);
 
+// Instellingen voor Express
+app.set('view engine', 'ejs');
+app.use(express.static('public'));
+app.use(express.urlencoded({ extended: true })); // Voor het parsen van URL-gecodeerde gegevens
+
 // Configuratie voor Multer - Bestandsopslag en beperkingen
 const upload = multer({
-    dest: 'uploads/',
+    dest: path.join(__dirname, 'uploads/'),
     limits: {
         fileSize: 5 * 1024 * 1024 // Max 5MB
     },
@@ -40,11 +62,6 @@ const upload = multer({
         cb(new Error('Alleen Excel-bestanden (.xlsx, .xls) zijn toegestaan.'));
     }
 });
-
-// Instellingen voor Express
-app.set('view engine', 'ejs');
-app.use(express.static('public'));
-app.use(express.urlencoded({ extended: true })); // Voor het parsen van URL-gecodeerde gegevens
 
 // Utility functie om kolomindex om te zetten naar letter (ondersteunt kolommen na 'Z')
 function getColumnLetter(index) {
@@ -78,12 +95,12 @@ app.post('/scan-columns', upload.single('file'), (req, res) => {
 
         // Verwijder het geüploade bestand na verwerking
         fs.unlink(filePath, (err) => {
-            if (err) console.error('Fout bij het verwijderen van het bestand:', err);
+            if (err) logger.error(`Fout bij het verwijderen van het bestand: ${err.message}`);
         });
 
         res.json(columns);
     } catch (error) {
-        console.error('Fout bij het scannen van kolommen:', error);
+        logger.error(`Fout bij het scannen van kolommen: ${error.message}`);
         res.status(500).send('Er is een fout opgetreden bij het scannen van de kolommen.');
     }
 });
@@ -137,7 +154,7 @@ app.post('/upload', upload.single('file'), async (req, res) => {
             const articleNumber = hasHeader ? row[columnIndex] : row[column];
 
             if (!articleNumber) {
-                console.warn(`Rij ${i + 1} mist het artikelnummers.`);
+                logger.warn(`Rij ${i + 1} mist het artikelnummers.`);
                 continue;
             }
 
@@ -197,7 +214,7 @@ app.post('/upload', upload.single('file'), async (req, res) => {
                     data[i][column] = itsMeArticleNumber;
                 }
             } catch (rowError) {
-                console.error(`Fout bij het verwerken van rij ${i + 1}:`, rowError);
+                logger.error(`Fout bij het verwerken van rij ${i + 1}: ${rowError.message}`);
                 // Optioneel: Voeg een foutmelding toe aan de rij of sla deze over
                 continue;
             }
@@ -216,38 +233,32 @@ app.post('/upload', upload.single('file'), async (req, res) => {
         xlsx.utils.book_append_sheet(newWorkbook, newSheet, 'Updated');
 
         const outputFilename = `AGM_bijgewerkt_${Date.now()}.xlsx`;
-        const outputPath = path.join('uploads', outputFilename);
+        const outputPath = path.join(__dirname, 'uploads', outputFilename);
         xlsx.writeFile(newWorkbook, outputPath);
 
         // Verwijder het geüploade bestand na verwerking
         fs.unlink(filePath, (err) => {
-            if (err) console.error('Fout bij het verwijderen van het geüploade bestand:', err);
+            if (err) logger.error(`Fout bij het verwijderen van het geüploade bestand: ${err.message}`);
         });
 
         // Verzend het bijgewerkte bestand voor download
         res.download(outputPath, outputFilename, (err) => {
             if (err) {
-                console.error('Fout bij het verzenden van het bestand:', err);
+                logger.error(`Fout bij het verzenden van het bestand: ${err.message}`);
                 res.status(500).send('Er is een fout opgetreden bij het verzenden van het bestand.');
             }
 
             // Optioneel: Verwijder het outputbestand na download
             fs.unlink(outputPath, (err) => {
-                if (err) console.error('Fout bij het verwijderen van het outputbestand:', err);
+                if (err) logger.error(`Fout bij het verwijderen van het outputbestand: ${err.message}`);
             });
         });
-    } catch (error) {
-        console.error('Verwerkingsfout:', error);
-        // Verwijder het geüploade bestand in geval van een fout
-        fs.unlink(filePath, (err) => {
-            if (err) console.error('Fout bij het verwijderen van het geüploade bestand na een fout:', err);
-        });
-        res.status(500).send('Er is een fout opgetreden tijdens de verwerking.');
-    }
-});
+    });
 
-// Start de server
-const port = process.env.PORT || 5000;
-app.listen(port, () => {
-    console.log(`Server draait op http://localhost:${port}`);
-});
+    // Start de server
+    const port = process.env.PORT || 5000;
+    app.listen(port, () => {
+        logger.info(`Server draait op http://localhost:${port}`);
+    });
+
+    module.exports = app; // Voor tests
