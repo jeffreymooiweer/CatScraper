@@ -1,45 +1,60 @@
-# Gebruik een officiële Node.js runtime als basis image
-FROM node:14
+# Stage 1: Build Stage
+FROM node:20-alpine AS build
 
-# Installeer de vereiste bibliotheken voor Puppeteer
-RUN apt-get update && apt-get install -y \
-    libnss3 \
-    libatk-bridge2.0-0 \
-    libx11-xcb1 \
-    libxcomposite1 \
-    libxcursor1 \
-    libxdamage1 \
-    libxi6 \
-    libxtst6 \
-    libglib2.0-0 \
-    libnss3 \
-    libxrandr2 \
-    libasound2 \
-    libpangocairo-1.0-0 \
-    libpango-1.0-0 \
-    libgtk-3-0 \
-    libgbm1 \
-    libnspr4 \
+# Installeer benodigde dependencies voor Puppeteer
+RUN apk add --no-cache \
+    nss \
+    freetype \
+    freetype-dev \
+    harfbuzz \
     ca-certificates \
-    fonts-liberation \
-    libappindicator3-1 \
-    xdg-utils \
-    libnss3-tools
+    ttf-freefont \
+    chromium \
+    bash \
+    chromium-chromedriver
 
-# Maak de werkdirectory in de container
+# Stel de werkdirectory in
 WORKDIR /app
 
-# Kopieer package.json en package-lock.json voor de afhankelijkheden
+# Kopieer package.json en package-lock.json
 COPY package*.json ./
 
-# Installeer afhankelijkheden
-RUN npm install
+# Installeer applicatie dependencies
+RUN npm install --production
 
-# Kopieer de rest van de applicatiebestanden naar de container
+# Kopieer de rest van de applicatie
 COPY . .
+
+# Stage 2: Production Stage
+FROM node:20-alpine
+
+# Installeer alleen de runtime dependencies
+RUN apk add --no-cache \
+    nss \
+    freetype \
+    freetype-dev \
+    harfbuzz \
+    ca-certificates \
+    ttf-freefont \
+    chromium \
+    chromium-chromedriver
+
+# Stel de werkdirectory in
+WORKDIR /app
+
+# Kopieer node_modules en applicatiebestanden van de build stage
+COPY --from=build /app /app
+
+# Zet omgevingsvariabelen voor Puppeteer
+ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+
+# Voeg een non-root gebruiker toe
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+USER appuser
 
 # Exposeer poort 5000
 EXPOSE 5000
 
-# Start het Node.js programma
+# Start de applicatie
 CMD ["npm", "start"]
