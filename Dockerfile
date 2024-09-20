@@ -45,12 +45,18 @@ WORKDIR /app
 # Kopieer node_modules en applicatiebestanden van de build stage
 COPY --from=build /app /app
 
+# Maak de 'uploads' directory aan
+RUN mkdir -p /app/uploads
+
+# Zet de eigenaar van de 'uploads' directory op 'appuser'
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+RUN chown -R appuser:appgroup /app/uploads
+
 # Zet omgevingsvariabelen voor Puppeteer
 ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 
-# Voeg een non-root gebruiker toe
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+# Wissel naar de non-root gebruiker
 USER appuser
 
 # Exposeer poort 5000
