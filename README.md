@@ -48,253 +48,177 @@ CatScraper is a robust Node.js web scraping application designed to extract and 
 
 1. **Clone the Repository**
 
-   ```bash
-   git clone https://github.com/jeffersonmouze/catscraper.git
-   cd catscraper
+        git clone https://github.com/jeffersonmouze/catscraper.git
+        cd catscraper
+   
+2. **Install Dependencies**
 
-2. Install Dependencies
+        npm install
 
-```bash
-npm install
-```
+3. **Set Up Environment Variables**
 
-3. Set Up Environment Variables
+    Create a .env file in the root directory:
 
-Create a .env file in the root directory:
+        touch .env
 
-touch .env
+    Populate .env with the following variables:
 
-Populate .env with the following variables:
+        PORT=5000
+        DOCKER_USERNAME=your_dockerhub_username
+        DOCKER_PASSWORD=your_dockerhub_password
+   Note: Ensure that .env is added to .gitignore to prevent sensitive information from being exposed.
 
-PORT=5000
-DOCKER_USERNAME=your_dockerhub_username
-DOCKER_PASSWORD=your_dockerhub_password
+4. **Start the Application**
 
-Note: Ensure that .env is added to .gitignore to prevent sensitive information from being exposed.
+        npm start
+   For development with automatic restarts:
 
+        npm run dev
 
-4. Start the Application
+5. **Access the Application**
 
-npm start
-
-For development with automatic restarts:
-
-npm run dev
+    Open your browser and navigate to http://localhost:5000.
 
 
-5. Access the Application
-
-Open your browser and navigate to http://localhost:5000.
-
-
-
-Configuration
+## Configuration
 
 CatScraper requires specific configurations to interact with supplier websites. When uploading an Excel file, you will need to provide:
 
-Column Selection: Choose the column containing article numbers.
+- Column Selection: Choose the column containing article numbers.
+- Header Information: Indicate if the Excel file contains a header row.
+- Supplier 1 & 2 Details:
+  - Login URLs: The URLs for logging into each supplier's website.
+  - Search URLs: The URLs used to search for articles, with placeholders for dynamic values.
+  - Selectors: CSS selectors for username, password, search bars, and output elements.
+  - Credentials: Usernames, passwords, and optional customer numbers required for login.
 
-Header Information: Indicate if the Excel file contains a header row.
+## Usage
 
-Supplier 1 & 2 Details:
+1. **Upload Excel File**
+  - Navigate to the homepage.
+  - Click on the "Upload Excel-bestand" button to select your .xlsx or .xls file.
+  - The application will automatically scan and populate the column selection dropdown.
 
-Login URLs: The URLs for logging into each supplier's website.
+2. **Configure Supplier Details**
+  - Fill in the required fields for both suppliers, including login URLs, search URLs, selectors, and credentials.
+  - Indicate if customer numbers are required for each supplier and provide the necessary information if applicable.
 
-Search URLs: The URLs used to search for articles, with placeholders for dynamic values.
+3. **Start Processing**
+  - Click on the "Uploaden en Verwerken" button.
+  - The application will process the file, scrape the necessary data, and provide an updated Excel file for download.
 
-Selectors: CSS selectors for username, password, search bars, and output elements.
-
-Credentials: Usernames, passwords, and optional customer numbers required for login.
-
-
-
-Usage
-
-1. Upload Excel File
-
-Navigate to the homepage.
-
-Click on the "Upload Excel-bestand" button to select your .xlsx or .xls file.
-
-The application will automatically scan and populate the column selection dropdown.
-
-
-
-2. Configure Supplier Details
-
-Fill in the required fields for both suppliers, including login URLs, search URLs, selectors, and credentials.
-
-Indicate if customer numbers are required for each supplier and provide the necessary information if applicable.
-
-
-
-3. Start Processing
-
-Click on the "Uploaden en Verwerken" button.
-
-The application will process the file, scrape the necessary data, and provide an updated Excel file for download.
-
-
-
-
-Docker
+## Docker
 
 CatScraper can be easily containerized using Docker, ensuring consistency across different environments.
 
-Building the Docker Image
+  **Building the Docker Image**
+    
+    docker build -t jeffersonmouze/catscraper:latest .
 
-docker build -t jeffersonmouze/catscraper:latest .
+  **Running the Docker Container**
 
-Running the Docker Container
+    docker run -d -p 5000:5000 -v /path/to/local/uploads:/app/uploads jeffersonmouze/catscraper:latest
 
-docker run -d -p 5000:5000 -v /path/to/local/uploads:/app/uploads jeffersonmouze/catscraper:latest
+  - Port Mapping: Maps port 5000 of the container to port 5000 of the host.
+  - Volume Mounting: Mounts the local uploads directory to the container for persistent storage.
+  
+  **Pushing to Docker Hub**
+  Ensure you are logged in to Docker Hub:
 
-Port Mapping: Maps port 5000 of the container to port 5000 of the host.
+    docker login
 
-Volume Mounting: Mounts the local uploads directory to the container for persistent storage.
+  Push the image:
 
+    docker push jeffersonmouze/catscraper:latest
 
-Pushing to Docker Hub
+## Continuous Integration
+  CatScraper uses GitHub Actions for automated building and pushing of Docker images.
 
-Ensure you are logged in to Docker Hub:
+  **Workflow Configuration**
+  The CI workflow is defined in .github/workflows/docker-image.yml and triggers on pushes and pull requests to the main branch. It performs the following steps:
 
-docker login
+  1. Checkout Code: Retrieves the repository code.
+  2. Set Up Docker Buildx: Prepares Docker for building multi-platform images.
+  3. Cache Docker Layers: Caches Docker layers to speed up subsequent builds.
+  4. Login to Docker Hub: Authenticates with Docker Hub using secrets.
+  5. Build and Push Docker Image: Builds the Docker image and pushes it to Docker Hub with both latest and commit SHA tags.
+  6. Notify: Provides success or failure notifications.
 
-Push the image:
+  **Secrets Management**
+  Ensure the following secrets are set in your GitHub repository:
 
-docker push jeffersonmouze/catscraper:latest
+  DOCKER_USERNAME: Your Docker Hub username.
+  DOCKER_PASSWORD: Your Docker Hub password.
 
-Continuous Integration
+## Testing
 
-CatScraper uses GitHub Actions for automated building and pushing of Docker images.
+  CatScraper includes basic tests to ensure functionality.
 
-Workflow Configuration
+  **Running Tests**
 
-The CI workflow is defined in .github/workflows/docker-image.yml and triggers on pushes and pull requests to the main branch. It performs the following steps:
+    npm test
 
-1. Checkout Code: Retrieves the repository code.
-
-
-2. Set Up Docker Buildx: Prepares Docker for building multi-platform images.
-
-
-3. Cache Docker Layers: Caches Docker layers to speed up subsequent builds.
-
-
-4. Login to Docker Hub: Authenticates with Docker Hub using secrets.
-
-
-5. Build and Push Docker Image: Builds the Docker image and pushes it to Docker Hub with both latest and commit SHA tags.
-
-
-6. Notify: Provides success or failure notifications.
-
-
-
-Secrets Management
-
-Ensure the following secrets are set in your GitHub repository:
-
-DOCKER_USERNAME: Your Docker Hub username.
-
-DOCKER_PASSWORD: Your Docker Hub password.
-
-
-Testing
-
-CatScraper includes basic tests to ensure functionality.
-
-Running Tests
-
-npm test
-
-Example Test
-
-An example test checks if the homepage loads correctly:
-
-// test/app.test.js
-
-const request = require('supertest');
-const app = require('../app'); // Ensure app.js exports the Express app
-
-describe('GET /', () => {
-    it('should return 200 OK and contain CatScraper text', async () => {
-        const res = await request(app).get('/');
-        expect(res.statusCode).toEqual(200);
-        expect(res.text).toContain('CatScraper');
+  **Example Test**
+  An example test checks if the homepage loads correctly:
+  
+    // test/app.test.js
+    
+    const request = require('supertest');
+    const app = require('../app'); // Ensure app.js exports the Express app
+    
+    describe('GET /', () => {
+        it('should return 200 OK and contain CatScraper text', async () => {
+            const res = await request(app).get('/');
+            expect(res.statusCode).toEqual(200);
+            expect(res.text).toContain('CatScraper');
+        });
     });
-});
 
-Logging
+## Logging
 
-CatScraper uses Winston for comprehensive logging. Logs are stored in app.log and printed to the console.
+  CatScraper uses Winston for comprehensive logging. Logs are stored in app.log and printed to the console.
 
-Log Configuration
+  **Log Configuration**
+  - Levels: info, warn, error
+  - Transports:
+    - Console: For real-time logging.
+    -   File: Logs are saved to app.log for persistent storage.
 
-Levels: info, warn, error
+## Security
+  
+  CatScraper implements several security best practices:
+  - Helmet: Secures HTTP headers.
+  - Rate Limiting: Prevents abuse by limiting the number of requests per IP.
+  - Non-Root User: Runs the application as a non-root user within Docker.
+  - Input Validation: Ensures only Excel files are accepted for upload.
+  
+  **Environment Variables**
+  Sensitive information, such as Docker credentials and application settings, are managed through environment variables defined in the .env file.
 
-Transports:
-
-Console: For real-time logging.
-
-File: Logs are saved to app.log for persistent storage.
-
-
-
-Security
-
-CatScraper implements several security best practices:
-
-Helmet: Secures HTTP headers.
-
-Rate Limiting: Prevents abuse by limiting the number of requests per IP.
-
-Non-Root User: Runs the application as a non-root user within Docker.
-
-Input Validation: Ensures only Excel files are accepted for upload.
-
-
-Environment Variables
-
-Sensitive information, such as Docker credentials and application settings, are managed through environment variables defined in the .env file.
-
-Contributing
+## Contributing
 
 Contributions are welcome! Please follow these steps:
+  1. Fork the Repository
+  2. Create a Feature Branch
 
-1. Fork the Repository
+    git checkout -b feature/YourFeature
 
+  3. Commit Your Changes
 
-2. Create a Feature Branch
+    git commit -m "Add your feature"
 
-git checkout -b feature/YourFeature
+  4. Push to the Branch
 
+    git push origin feature/YourFeature
 
-3. Commit Your Changes
+  5. Open a Pull Request
 
-git commit -m "Add your feature"
+  Please ensure your code follows the project's coding standards and includes relevant tests.
 
+## License
 
-4. Push to the Branch
+  This project is licensed under the MIT License.
 
-git push origin feature/YourFeature
-
-
-5. Open a Pull Request
-
-
-
-Please ensure your code follows the project's coding standards and includes relevant tests.
-
-License
-
-This project is licensed under the MIT License.
-
-
----
-
-Developed with ❤️ by Jeffrey Mooiweer
-
-
+*Developed with ❤️ by Jeffrey Mooiweer*
 
 
