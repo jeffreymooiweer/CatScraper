@@ -1,30 +1,34 @@
+<!-- views/index.ejs -->
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="nl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Catscraper</title>
+    <title>CatScraper</title>
     <link rel="stylesheet" href="/style.css">
     <link rel="icon" href="/images/favicon.png" type="image/png">
 </head>
 <body>
     <header class="header">
         <div class="logo-container">
-            <img src="/images/catscraper.png" alt="Catscraper Logo" class="logo">
-            <h1>Catscraper</h1>
+            <img src="/images/catscraper.png" alt="CatScraper Logo" class="logo">
+            <h1>CatScraper</h1>
         </div>
     </header>
 
     <div class="container">
-        <form action="/upload" method="POST" enctype="multipart/form-data">
+        <form id="uploadForm" action="/upload" method="POST" enctype="multipart/form-data">
             <div class="form-group">
                 <label for="file">Upload Excel-bestand:</label>
-                <input type="file" name="file" id="file" required>
+                <input type="file" name="file" id="file" accept=".xlsx, .xls" required>
             </div>
 
             <div class="form-group">
                 <label for="column">Kies Kolom met Artikelnummers:</label>
-                <select name="column" id="column" disabled></select>
+                <select name="column" id="column" disabled required>
+                    <option value="">Selecteer een kolom</option>
+                </select>
             </div>
 
             <div class="form-group checkbox-container">
@@ -37,31 +41,31 @@
             <div class="supplier-section">
                 <div class="form-group">
                     <label for="supplier1LoginURL">Inlog URL Leverancier 1:</label>
-                    <input type="text" name="supplier1LoginURL" required placeholder="https://leverancier1.com/login">
+                    <input type="url" name="supplier1LoginURL" id="supplier1LoginURL" required placeholder="https://leverancier1.com/login">
                 </div>
                 <div class="form-group">
                     <label for="supplier1SearchURL">Zoek URL Leverancier 1:</label>
-                    <input type="text" name="supplier1SearchURL" required placeholder="https://leverancier1.com/search/{articleNumber}">
+                    <input type="url" name="supplier1SearchURL" id="supplier1SearchURL" required placeholder="https://leverancier1.com/search/{articleNumber}">
                 </div>
                 <div class="form-group">
                     <label for="usernameSelector1">Selector Gebruikersnaam (ID):</label>
-                    <input type="text" name="usernameSelector1" required placeholder="Bijv. j_username">
+                    <input type="text" name="usernameSelector1" id="usernameSelector1" required placeholder="Bijv. j_username">
                 </div>
                 <div class="form-group">
                     <label for="username1">Gebruikersnaam:</label>
-                    <input type="text" name="username1" required>
+                    <input type="text" name="username1" id="username1" required>
                 </div>
                 <div class="form-group">
                     <label for="passwordSelector1">Selector Wachtwoord (ID):</label>
-                    <input type="text" name="passwordSelector1" required placeholder="Bijv. j_password">
+                    <input type="text" name="passwordSelector1" id="passwordSelector1" required placeholder="Bijv. j_password">
                 </div>
                 <div class="form-group">
                     <label for="password1">Wachtwoord:</label>
-                    <input type="password" name="password1" required>
+                    <input type="password" name="password1" id="password1" required>
                 </div>
                 <div class="form-group">
                     <label for="searchSelector1">Selector Zoekbalk (ID):</label>
-                    <input type="text" name="searchSelector1" required placeholder="Bijv. search_input">
+                    <input type="text" name="searchSelector1" id="searchSelector1" required placeholder="Bijv. search_input">
                 </div>
                 <div class="form-group checkbox-container">
                     <label for="customerNumberRequired1">Klantnummer vereist?</label>
@@ -70,11 +74,11 @@
                 <div id="customerNumber1Section" style="display:none;">
                     <div class="form-group">
                         <label for="customerNumberSelector1">Selector Klantnummer (ID):</label>
-                        <input type="text" name="customerNumberSelector1" placeholder="Bijv. customerNumber">
+                        <input type="text" name="customerNumberSelector1" id="customerNumberSelector1" placeholder="Bijv. customerNumber">
                     </div>
                     <div class="form-group">
                         <label for="customerNumber1">Klantnummer:</label>
-                        <input type="text" name="customerNumber1">
+                        <input type="text" name="customerNumber1" id="customerNumber1">
                     </div>
                 </div>
             </div>
@@ -84,31 +88,31 @@
             <div class="supplier-section">
                 <div class="form-group">
                     <label for="supplier2LoginURL">Inlog URL Leverancier 2:</label>
-                    <input type="text" name="supplier2LoginURL" required placeholder="https://leverancier2.com/login">
+                    <input type="url" name="supplier2LoginURL" id="supplier2LoginURL" required placeholder="https://leverancier2.com/login">
                 </div>
                 <div class="form-group">
                     <label for="supplier2SearchURL">Zoek URL Leverancier 2:</label>
-                    <input type="text" name="supplier2SearchURL" required placeholder="https://leverancier2.com/search/{supplierCode}">
+                    <input type="url" name="supplier2SearchURL" id="supplier2SearchURL" required placeholder="https://leverancier2.com/search/{supplierCode}">
                 </div>
                 <div class="form-group">
                     <label for="usernameSelector2">Selector Gebruikersnaam (ID):</label>
-                    <input type="text" name="usernameSelector2" required placeholder="Bijv. j_username">
+                    <input type="text" name="usernameSelector2" id="usernameSelector2" required placeholder="Bijv. j_username">
                 </div>
                 <div class="form-group">
                     <label for="username2">Gebruikersnaam:</label>
-                    <input type="text" name="username2" required>
+                    <input type="text" name="username2" id="username2" required>
                 </div>
                 <div class="form-group">
                     <label for="passwordSelector2">Selector Wachtwoord (ID):</label>
-                    <input type="text" name="passwordSelector2" required placeholder="Bijv. j_password">
+                    <input type="text" name="passwordSelector2" id="passwordSelector2" required placeholder="Bijv. j_password">
                 </div>
                 <div class="form-group">
                     <label for="password2">Wachtwoord:</label>
-                    <input type="password" name="password2" required>
+                    <input type="password" name="password2" id="password2" required>
                 </div>
                 <div class="form-group">
                     <label for="searchSelector2">Selector Zoekbalk (ID):</label>
-                    <input type="text" name="searchSelector2" required placeholder="Bijv. search_input">
+                    <input type="text" name="searchSelector2" id="searchSelector2" required placeholder="Bijv. search_input">
                 </div>
                 <div class="form-group checkbox-container">
                     <label for="customerNumberRequired2">Klantnummer vereist?</label>
@@ -117,11 +121,11 @@
                 <div id="customerNumber2Section" style="display:none;">
                     <div class="form-group">
                         <label for="customerNumberSelector2">Selector Klantnummer (ID):</label>
-                        <input type="text" name="customerNumberSelector2" placeholder="Bijv. customerNumber">
+                        <input type="text" name="customerNumberSelector2" id="customerNumberSelector2" placeholder="Bijv. customerNumber">
                     </div>
                     <div class="form-group">
                         <label for="customerNumber2">Klantnummer:</label>
-                        <input type="text" name="customerNumber2">
+                        <input type="text" name="customerNumber2" id="customerNumber2">
                     </div>
                 </div>
             </div>
@@ -142,26 +146,45 @@
         }
 
         document.getElementById('file').addEventListener('change', async function () {
+            const file = this.files[0];
+            if (!file) return;
+
             const formData = new FormData();
-            formData.append('file', this.files[0]);
+            formData.append('file', file);
 
-            const response = await fetch('/scan-columns', {
-                method: 'POST',
-                body: formData,
-            });
-
-            const columns = await response.json();
             const columnSelect = document.getElementById('column');
+            columnSelect.disabled = true;
+            columnSelect.innerHTML = '<option value="">Selecteer een kolom</option>'; // Reset opties
 
-            columnSelect.innerHTML = '';
-            columns.forEach(column => {
-                const option = document.createElement('option');
-                option.value = column;
-                option.textContent = `Kolom ${column}`;
-                columnSelect.appendChild(option);
-            });
+            try {
+                const response = await fetch('/scan-columns', {
+                    method: 'POST',
+                    body: formData,
+                });
 
-            columnSelect.disabled = false; // Enable dropdown after columns are loaded
+                if (!response.ok) {
+                    throw new Error('Mislukt om kolommen te scannen.');
+                }
+
+                const columns = await response.json();
+                columns.forEach(column => {
+                    const option = document.createElement('option');
+                    option.value = column;
+                    option.textContent = `Kolom ${column}`;
+                    columnSelect.appendChild(option);
+                });
+
+                columnSelect.disabled = false; // Activeer dropdown nadat kolommen geladen zijn
+            } catch (error) {
+                console.error('Fout bij het scannen van kolommen:', error);
+                alert('Er is een fout opgetreden bij het scannen van de kolommen. Probeer het opnieuw.');
+            }
+        });
+
+        // Optioneel: Voeg client-side validatie toe voordat het formulier wordt verzonden
+        document.getElementById('uploadForm').addEventListener('submit', function (e) {
+            // Voeg hier aanvullende validatie toe indien nodig
+            // Bijvoorbeeld controleren of alle vereiste velden zijn ingevuld
         });
     </script>
 </body>
