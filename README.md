@@ -5,94 +5,295 @@
 
 # CatScraper
 
-**CatScraper** is a web-based scraping tool built with Node.js and Puppeteer. It allows users to extract product data from multiple suppliers, compare article numbers, and synchronize results across different vendors. The tool is designed for use with Excel files and supports custom login configurations for each supplier.
+![License](https://img.shields.io/badge/License-MIT-blue.svg)
+![Docker Image Size](https://img.shields.io/docker/image-size/jeffersonmouze/catscraper/latest)
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/jeffersonmouze/catscraper/Build%20and%20Push%20Docker%20Image)
+
+CatScraper is a robust Node.js web scraping application designed to extract and process data from suppliers such as Technische Unie and It's Me. Leveraging powerful tools like Puppeteer and Excel file manipulation, CatScraper automates data extraction, transformation, and delivery, ensuring efficiency and accuracy.
+
+## Table of Contents
+
+- [Features](#features)
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [Usage](#usage)
+- [Docker](#docker)
+- [Continuous Integration](#continuous-integration)
+- [Testing](#testing)
+- [Logging](#logging)
+- [Security](#security)
+- [Contributing](#contributing)
+- [License](#license)
 
 ## Features
-- Upload and process Excel files with article numbers.
-- Supports multiple suppliers with configurable login fields, including customer number options.
-- Automatic column scanning for Excel files.
-- Web scraping with Puppeteer to extract data from supplier websites.
-- Replace article numbers and export updated Excel files.
 
-## Requirements
-- Node.js v14+ or higher
-- Docker (for deployment in container environments)
-- Unraid (optional, for server deployment)
+- **Automated Web Scraping:** Utilize Puppeteer to navigate, login, and extract data from multiple supplier websites.
+- **Excel Integration:** Seamlessly read from and write to Excel files, supporting `.xlsx` and `.xls` formats.
+- **File Uploads:** Securely upload Excel files through a user-friendly web interface.
+- **Dynamic Column Selection:** Automatically detect and allow users to select the column containing article numbers.
+- **Rate Limiting & Security:** Protect the application from abuse with rate limiting and secure HTTP headers using Helmet.
+- **Logging:** Comprehensive logging with Winston for easy debugging and monitoring.
+- **Dockerized Deployment:** Easy deployment using Docker with optimized multi-stage builds.
+- **Continuous Integration:** Automated builds and deployments using GitHub Actions.
+
+## Prerequisites
+
+- **Node.js:** v20.x or higher
+- **npm:** v10.x or higher
+- **Docker:** v20.x or higher (optional, for containerized deployment)
+- **Docker Hub Account:** For pushing Docker images
 
 ## Installation
 
-### Local Setup
-1. Clone the repository:
-    ```bash
-    git clone https://github.com/jeffreymooiweer/CatScraper.git
-    ```
-2. Install dependencies:
-    ```bash
-    npm install
-    ```
-3. Run the application:
-    ```bash
-    npm start
-    ```
+1. **Clone the Repository**
 
-### Docker Setup
-For deployment using Docker, you can pull the container directly from Docker Hub:
-```bash
-docker pull jeffersonmouze/catscraper:latest
-```
+   ```bash
+   git clone https://github.com/jeffersonmouze/catscraper.git
+   cd catscraper
 
-When configuring in **Unraid**, use the following port mapping:
-- `5000:5000`
+2. Install Dependencies
 
-For volume mappings:
-- `/uploads`: Path for storing uploaded Excel files.
-- `/config`: Path for saving configuration data.
+npm install
 
-### Unraid XML Configuration
-For **Unraid** users, use the following XML configuration to set up CatScraper easily:
 
-```xml
-<Container>
-    <Name>CatScraper</Name>
-    <Repository>jeffersonmouze/catscraper:latest</Repository>
-    <Network>bridge</Network>
-    <MyPorts>
-        <Port>
-            <HostPort>5000</HostPort>
-            <ContainerPort>5000</ContainerPort>
-            <Protocol>tcp</Protocol>
-        </Port>
-    </MyPorts>
-    <MyVolumes>
-        <Volume>
-            <HostDir>/path/to/uploads</HostDir>
-            <ContainerDir>/uploads</ContainerDir>
-        </Volume>
-        <Volume>
-            <HostDir>/path/to/config</HostDir>
-            <ContainerDir>/config</ContainerDir>
-        </Volume>
-    </MyVolumes>
-    <WebUI>http://[IP]:[PORT:5000]</WebUI>
-    <Icon>https://raw.githubusercontent.com/jeffreymooiweer/CatScraper/main/public/images/favicon.png</Icon>
-    <Description>Web scraper to sync article numbers between suppliers, built with Node.js and Puppeteer.</Description>
-</Container>
-```
+3. Set Up Environment Variables
 
-You need to specify the host paths for `/uploads` and `/config` during setup.
+Create a .env file in the root directory:
 
-## Usage
-1. Upload an Excel file containing article numbers.
-2. Select the column containing article numbers.
-3. Configure supplier login details, including selectors for username, password, and customer numbers (if applicable).
-4. Start the scraping process and download the updated Excel file.
+touch .env
 
-## Screenshots
-![Screenshot of CatScraper](https://github.com/jeffreymooiweer/CatScraper/public/images/catscraper.png)
+Populate .env with the following variables:
 
-## Contributing
-Contributions are welcome! Please submit pull requests and issues to improve the application.
+PORT=5000
+DOCKER_USERNAME=your_dockerhub_username
+DOCKER_PASSWORD=your_dockerhub_password
 
-## License
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
+Note: Ensure that .env is added to .gitignore to prevent sensitive information from being exposed.
+
+
+4. Start the Application
+
+npm start
+
+For development with automatic restarts:
+
+npm run dev
+
+
+5. Access the Application
+
+Open your browser and navigate to http://localhost:5000.
+
+
+
+Configuration
+
+CatScraper requires specific configurations to interact with supplier websites. When uploading an Excel file, you will need to provide:
+
+Column Selection: Choose the column containing article numbers.
+
+Header Information: Indicate if the Excel file contains a header row.
+
+Supplier 1 & 2 Details:
+
+Login URLs: The URLs for logging into each supplier's website.
+
+Search URLs: The URLs used to search for articles, with placeholders for dynamic values.
+
+Selectors: CSS selectors for username, password, search bars, and output elements.
+
+Credentials: Usernames, passwords, and optional customer numbers required for login.
+
+
+
+Usage
+
+1. Upload Excel File
+
+Navigate to the homepage.
+
+Click on the "Upload Excel-bestand" button to select your .xlsx or .xls file.
+
+The application will automatically scan and populate the column selection dropdown.
+
+
+
+2. Configure Supplier Details
+
+Fill in the required fields for both suppliers, including login URLs, search URLs, selectors, and credentials.
+
+Indicate if customer numbers are required for each supplier and provide the necessary information if applicable.
+
+
+
+3. Start Processing
+
+Click on the "Uploaden en Verwerken" button.
+
+The application will process the file, scrape the necessary data, and provide an updated Excel file for download.
+
+
+
+
+Docker
+
+CatScraper can be easily containerized using Docker, ensuring consistency across different environments.
+
+Building the Docker Image
+
+docker build -t jeffersonmouze/catscraper:latest .
+
+Running the Docker Container
+
+docker run -d -p 5000:5000 -v /path/to/local/uploads:/app/uploads jeffersonmouze/catscraper:latest
+
+Port Mapping: Maps port 5000 of the container to port 5000 of the host.
+
+Volume Mounting: Mounts the local uploads directory to the container for persistent storage.
+
+
+Pushing to Docker Hub
+
+Ensure you are logged in to Docker Hub:
+
+docker login
+
+Push the image:
+
+docker push jeffersonmouze/catscraper:latest
+
+Continuous Integration
+
+CatScraper uses GitHub Actions for automated building and pushing of Docker images.
+
+Workflow Configuration
+
+The CI workflow is defined in .github/workflows/docker-image.yml and triggers on pushes and pull requests to the main branch. It performs the following steps:
+
+1. Checkout Code: Retrieves the repository code.
+
+
+2. Set Up Docker Buildx: Prepares Docker for building multi-platform images.
+
+
+3. Cache Docker Layers: Caches Docker layers to speed up subsequent builds.
+
+
+4. Login to Docker Hub: Authenticates with Docker Hub using secrets.
+
+
+5. Build and Push Docker Image: Builds the Docker image and pushes it to Docker Hub with both latest and commit SHA tags.
+
+
+6. Notify: Provides success or failure notifications.
+
+
+
+Secrets Management
+
+Ensure the following secrets are set in your GitHub repository:
+
+DOCKER_USERNAME: Your Docker Hub username.
+
+DOCKER_PASSWORD: Your Docker Hub password.
+
+
+Testing
+
+CatScraper includes basic tests to ensure functionality.
+
+Running Tests
+
+npm test
+
+Example Test
+
+An example test checks if the homepage loads correctly:
+
+// test/app.test.js
+
+const request = require('supertest');
+const app = require('../app'); // Ensure app.js exports the Express app
+
+describe('GET /', () => {
+    it('should return 200 OK and contain CatScraper text', async () => {
+        const res = await request(app).get('/');
+        expect(res.statusCode).toEqual(200);
+        expect(res.text).toContain('CatScraper');
+    });
+});
+
+Logging
+
+CatScraper uses Winston for comprehensive logging. Logs are stored in app.log and printed to the console.
+
+Log Configuration
+
+Levels: info, warn, error
+
+Transports:
+
+Console: For real-time logging.
+
+File: Logs are saved to app.log for persistent storage.
+
+
+
+Security
+
+CatScraper implements several security best practices:
+
+Helmet: Secures HTTP headers.
+
+Rate Limiting: Prevents abuse by limiting the number of requests per IP.
+
+Non-Root User: Runs the application as a non-root user within Docker.
+
+Input Validation: Ensures only Excel files are accepted for upload.
+
+
+Environment Variables
+
+Sensitive information, such as Docker credentials and application settings, are managed through environment variables defined in the .env file.
+
+Contributing
+
+Contributions are welcome! Please follow these steps:
+
+1. Fork the Repository
+
+
+2. Create a Feature Branch
+
+git checkout -b feature/YourFeature
+
+
+3. Commit Your Changes
+
+git commit -m "Add your feature"
+
+
+4. Push to the Branch
+
+git push origin feature/YourFeature
+
+
+5. Open a Pull Request
+
+
+
+Please ensure your code follows the project's coding standards and includes relevant tests.
+
+License
+
+This project is licensed under the MIT License.
+
+
+---
+
+Developed with ❤️ by Jeffrey Mooiweer
+
+
+
 
