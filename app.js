@@ -1,5 +1,3 @@
-// app.js
-
 require('dotenv').config(); // Add this for using .env variables
 const express = require('express');
 const multer = require('multer');
