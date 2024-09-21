@@ -50,7 +50,7 @@ CatScraper is a robust Node.js web scraping application designed to extract and 
 
 1. **Clone the Repository**
 
-        git clone https://github.com/jeffersonmouze/catscraper.git
+        git clone https://github.com/jeffreymooiweer/catscraper.git
         cd catscraper
    
 2. **Install Dependencies**
