@@ -45,9 +45,15 @@ app.set('view engine', 'ejs');
 app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true })); // For parsing URL-encoded data
 
+// Ensure 'uploads' directory exists
+const uploadsDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir, { recursive: true });
+}
+
 // Multer configuration - File storage and limits
 const upload = multer({
-    dest: path.join(__dirname, 'uploads/'),
+    dest: uploadsDir,
     limits: {
         fileSize: 5 * 1024 * 1024 // Max 5MB
     },
@@ -232,7 +238,7 @@ app.post('/upload', upload.single('file'), async (req, res) => {
         xlsx.utils.book_append_sheet(newWorkbook, newSheet, 'Updated');
 
         const outputFilename = `AGM_bijgewerkt_${Date.now()}.xlsx`;
-        const outputPath = path.join(__dirname, 'uploads', outputFilename);
+        const outputPath = path.join(uploadsDir, outputFilename);
         xlsx.writeFile(newWorkbook, outputPath);
 
         // Delete the uploaded file after processing
@@ -252,18 +258,22 @@ app.post('/upload', upload.single('file'), async (req, res) => {
                 if (err) logger.error(`Error deleting output file: ${err.message}`);
             });
         });
-    });
+    } catch (error) {
+        logger.error(`Error during upload and processing: ${error.message}`);
+        res.status(500).send('An error occurred during the upload and processing of the file.');
+    }
+});
 
-    // Global error handler (optional but recommended)
-    app.use((err, req, res, next) => {
-        logger.error(`Unhandled error: ${err.message}`);
-        res.status(500).send('An unexpected error occurred.');
-    });
+// Global error handler (optional but recommended)
+app.use((err, req, res, next) => {
+    logger.error(`Unhandled error: ${err.message}`);
+    res.status(500).send('An unexpected error occurred.');
+});
 
-    // Start the server
-    const port = process.env.PORT || 5000;
-    app.listen(port, () => {
-        logger.info(`Server running at http://localhost:${port}`);
-    });
+// Start the server
+const port = process.env.PORT || 5000;
+app.listen(port, () => {
+    logger.info(`Server running at http://localhost:${port}`);
+});
 
-    module.exports = app; // For testing
+module.exports = app; // For testing
