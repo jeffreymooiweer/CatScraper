@@ -72,7 +72,7 @@ jobs:
           context: .
           push: true
           tags:
-            - "jeffersonmouze/catscraper:latest"
+            - jeffersonmouze/catscraper:latest
             - "jeffersonmouze/catscraper:${{ github.sha }}"
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new
