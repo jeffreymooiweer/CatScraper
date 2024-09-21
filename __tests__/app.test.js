@@ -3,6 +3,21 @@
 const request = require('supertest');
 const app = require('../app'); // Zorg ervoor dat dit pad correct is
 
+// Server variabele om te kunnen sluiten na de tests
+let server;
+
+beforeAll((done) => {
+  // Start de server voor de tests
+  server = app.listen(5000, () => {
+    done();
+  });
+});
+
+afterAll((done) => {
+  // Sluit de server na alle tests
+  server.close(done);
+});
+
 describe('GET /', () => {
   it('should return 200 OK and render the homepage', async () => {
     const res = await request(app).get('/');
