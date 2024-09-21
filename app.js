@@ -1,21 +1,20 @@
 // app.js
 
-require('dotenv').config(); // Voeg dit toe voor het gebruik van .env variabelen
+require('dotenv').config(); // Add this for using .env variables
 const express = require('express');
 const multer = require('multer');
 const xlsx = require('xlsx');
 const puppeteer = require('puppeteer');
 const path = require('path');
 const fs = require('fs');
-const ejs = require('ejs');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const winston = require('winston');
 
-// Initialiseer Express-app
+// Initialize Express app
 const app = express();
 
-// Configuratie van winston logger
+// Configure Winston logger
 const logger = winston.createLogger({
     level: 'info',
     format: winston.format.combine(
@@ -30,23 +29,23 @@ const logger = winston.createLogger({
     ]
 });
 
-// Middleware beveiliging
+// Security middleware
 app.use(helmet());
 
-// Rate limiting om misbruik te voorkomen
+// Rate limiting to prevent abuse
 const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minuten
-    max: 100, // Max 100 verzoeken per IP
-    message: 'Te veel verzoeken vanaf deze IP, probeer het later opnieuw.'
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // Max 100 requests per IP
+    message: 'Too many requests from this IP, please try again later.'
 });
 app.use(limiter);
 
-// Instellingen voor Express
+// Express settings
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
-app.use(express.urlencoded({ extended: true })); // Voor het parsen van URL-gecodeerde gegevens
+app.use(express.urlencoded({ extended: true })); // For parsing URL-encoded data
 
-// Configuratie voor Multer - Bestandsopslag en beperkingen
+// Multer configuration - File storage and limits
 const upload = multer({
     dest: path.join(__dirname, 'uploads/'),
     limits: {
@@ -59,11 +58,11 @@ const upload = multer({
         if (mimetype && extname) {
             return cb(null, true);
         }
-        cb(new Error('Alleen Excel-bestanden (.xlsx, .xls) zijn toegestaan.'));
+        cb(new Error('Only Excel files (.xlsx, .xls) are allowed.'));
     }
 });
 
-// Utility functie om kolomindex om te zetten naar letter (ondersteunt kolommen na 'Z')
+// Utility function to convert column index to letter (supports columns beyond 'Z')
 function getColumnLetter(index) {
     let letter = '';
     while (index >= 0) {
@@ -78,7 +77,7 @@ app.get('/', (req, res) => {
     res.render('index');
 });
 
-// Route om kolommen te scannen van het geüploade Excel-bestand
+// Route to scan columns of the uploaded Excel file
 app.post('/scan-columns', upload.single('file'), (req, res) => {
     try {
         const filePath = req.file.path;
@@ -93,19 +92,19 @@ app.post('/scan-columns', upload.single('file'), (req, res) => {
             columns.push(letter);
         }
 
-        // Verwijder het geüploade bestand na verwerking
+        // Delete the uploaded file after processing
         fs.unlink(filePath, (err) => {
-            if (err) logger.error(`Fout bij het verwijderen van het bestand: ${err.message}`);
+            if (err) logger.error(`Error deleting file: ${err.message}`);
         });
 
         res.json(columns);
     } catch (error) {
-        logger.error(`Fout bij het scannen van kolommen: ${error.message}`);
-        res.status(500).send('Er is een fout opgetreden bij het scannen van de kolommen.');
+        logger.error(`Error scanning columns: ${error.message}`);
+        res.status(500).send('An error occurred while scanning the columns.');
     }
 });
 
-// Route voor upload en verwerking
+// Route for upload and processing
 app.post('/upload', upload.single('file'), async (req, res) => {
     const filePath = req.file.path;
     try {
@@ -141,7 +140,7 @@ app.post('/upload', upload.single('file'), async (req, res) => {
             data = xlsx.utils.sheet_to_json(sheet, { header: 0 });
         }
 
-        // Converteer kolomletter naar index
+        // Convert column letter to index
         const columnIndex = xlsx.utils.decode_col(column);
 
         const browser = await puppeteer.launch({
@@ -154,12 +153,12 @@ app.post('/upload', upload.single('file'), async (req, res) => {
             const articleNumber = hasHeader ? row[columnIndex] : row[column];
 
             if (!articleNumber) {
-                logger.warn(`Rij ${i + 1} mist het artikelnummers.`);
+                logger.warn(`Row ${i + 1} is missing the article number.`);
                 continue;
             }
 
             try {
-                // Leverancier 1 - Inloggen
+                // Supplier 1 - Login
                 await page.goto(supplier1LoginURL, { waitUntil: 'networkidle2' });
                 await page.type(`#${usernameSelector1}`, req.body.username1);
                 await page.type(`#${passwordSelector1}`, req.body.password1);
@@ -173,7 +172,7 @@ app.post('/upload', upload.single('file'), async (req, res) => {
                     page.waitForNavigation({ waitUntil: 'networkidle2' })
                 ]);
 
-                // Leverancier 1 - Zoeken
+                // Supplier 1 - Search
                 const supplier1SearchURLFormatted = supplier1SearchURL.replace('{articleNumber}', encodeURIComponent(articleNumber));
                 await page.goto(supplier1SearchURLFormatted, { waitUntil: 'networkidle2' });
                 await page.type(`#${searchSelector1}`, articleNumber);
@@ -183,7 +182,7 @@ app.post('/upload', upload.single('file'), async (req, res) => {
                 ]);
                 const supplierCode = await page.$eval('.selector1-output', el => el.innerText.trim());
 
-                // Leverancier 2 - Inloggen
+                // Supplier 2 - Login
                 await page.goto(supplier2LoginURL, { waitUntil: 'networkidle2' });
                 await page.type(`#${usernameSelector2}`, req.body.username2);
                 await page.type(`#${passwordSelector2}`, req.body.password2);
@@ -197,7 +196,7 @@ app.post('/upload', upload.single('file'), async (req, res) => {
                     page.waitForNavigation({ waitUntil: 'networkidle2' })
                 ]);
 
-                // Leverancier 2 - Zoeken
+                // Supplier 2 - Search
                 const supplier2SearchURLFormatted = supplier2SearchURL.replace('{supplierCode}', encodeURIComponent(supplierCode));
                 await page.goto(supplier2SearchURLFormatted, { waitUntil: 'networkidle2' });
                 await page.type(`#${searchSelector2}`, supplierCode);
@@ -207,22 +206,22 @@ app.post('/upload', upload.single('file'), async (req, res) => {
                 ]);
                 const itsMeArticleNumber = await page.$eval('.selector2-output', el => el.innerText.trim());
 
-                // Update Excel-data
+                // Update Excel data
                 if (hasHeader) {
                     data[i][columnIndex] = itsMeArticleNumber;
                 } else {
                     data[i][column] = itsMeArticleNumber;
                 }
             } catch (rowError) {
-                logger.error(`Fout bij het verwerken van rij ${i + 1}: ${rowError.message}`);
-                // Optioneel: Voeg een foutmelding toe aan de rij of sla deze over
+                logger.error(`Error processing row ${i + 1}: ${rowError.message}`);
+                // Optionally: Add an error message to the row or skip it
                 continue;
             }
         }
 
         await browser.close();
 
-        // Converteer data terug naar sheet
+        // Convert data back to sheet
         let newSheet;
         if (hasHeader) {
             newSheet = xlsx.utils.aoa_to_sheet(data);
@@ -236,29 +235,35 @@ app.post('/upload', upload.single('file'), async (req, res) => {
         const outputPath = path.join(__dirname, 'uploads', outputFilename);
         xlsx.writeFile(newWorkbook, outputPath);
 
-        // Verwijder het geüploade bestand na verwerking
+        // Delete the uploaded file after processing
         fs.unlink(filePath, (err) => {
-            if (err) logger.error(`Fout bij het verwijderen van het geüploade bestand: ${err.message}`);
+            if (err) logger.error(`Error deleting uploaded file: ${err.message}`);
         });
 
-        // Verzend het bijgewerkte bestand voor download
+        // Send the updated file for download
         res.download(outputPath, outputFilename, (err) => {
             if (err) {
-                logger.error(`Fout bij het verzenden van het bestand: ${err.message}`);
-                res.status(500).send('Er is een fout opgetreden bij het verzenden van het bestand.');
+                logger.error(`Error sending file: ${err.message}`);
+                res.status(500).send('An error occurred while sending the file.');
             }
 
-            // Optioneel: Verwijder het outputbestand na download
+            // Optionally: Delete the output file after download
             fs.unlink(outputPath, (err) => {
-                if (err) logger.error(`Fout bij het verwijderen van het outputbestand: ${err.message}`);
+                if (err) logger.error(`Error deleting output file: ${err.message}`);
             });
         });
     });
 
-    // Start de server
-    const port = process.env.PORT || 5000;
-    app.listen(port, () => {
-        logger.info(`Server draait op http://localhost:${port}`);
+    // Global error handler (optional but recommended)
+    app.use((err, req, res, next) => {
+        logger.error(`Unhandled error: ${err.message}`);
+        res.status(500).send('An unexpected error occurred.');
     });
 
-    module.exports = app; // Voor tests
+    // Start the server
+    const port = process.env.PORT || 5000;
+    app.listen(port, () => {
+        logger.info(`Server running at http://localhost:${port}`);
+    });
+
+    module.exports = app; // For testing
