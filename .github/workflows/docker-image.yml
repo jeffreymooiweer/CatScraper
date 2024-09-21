@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        shell: bash -l {0}
+        shell: "bash -l {0}"
 
     steps:
       # 1. Checkout the repository code
@@ -41,7 +41,7 @@ jobs:
 
       # 5. Run tests
       - name: Run tests
-      run: npm test --passWithNoTests
+        run: npm test --passWithNoTests
 
       # 6. Set up Docker Buildx
       - name: Set up Docker Buildx
@@ -71,7 +71,9 @@ jobs:
         with:
           context: .
           push: true
-          tags: jeffersonmouze/catscraper:latest, jeffersonmouze/catscraper:${{ github.sha }}
+          tags:
+            - jeffersonmouze/catscraper:latest
+            - jeffersonmouze/catscraper:${{ github.sha }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new
 
