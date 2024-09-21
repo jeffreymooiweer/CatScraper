@@ -45,15 +45,9 @@ app.set('view engine', 'ejs');
 app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true })); // For parsing URL-encoded data
 
-// Ensure 'uploads' directory exists
-const uploadsDir = path.join(__dirname, 'uploads');
-if (!fs.existsSync(uploadsDir)) {
-    fs.mkdirSync(uploadsDir, { recursive: true });
-}
-
 // Multer configuration - File storage and limits
 const upload = multer({
-    dest: uploadsDir,
+    dest: path.join(__dirname, 'uploads/'),
     limits: {
         fileSize: 5 * 1024 * 1024 // Max 5MB
     },
@@ -238,7 +232,7 @@ app.post('/upload', upload.single('file'), async (req, res) => {
         xlsx.utils.book_append_sheet(newWorkbook, newSheet, 'Updated');
 
         const outputFilename = `AGM_bijgewerkt_${Date.now()}.xlsx`;
-        const outputPath = path.join(uploadsDir, outputFilename);
+        const outputPath = path.join(__dirname, 'uploads', outputFilename);
         xlsx.writeFile(newWorkbook, outputPath);
 
         // Delete the uploaded file after processing
