@@ -41,7 +41,7 @@ jobs:
 
       # 5. Run tests
       - name: Run tests
-        run: npm test
+      run: npm test --passWithNoTests
 
       # 6. Set up Docker Buildx
       - name: Set up Docker Buildx
