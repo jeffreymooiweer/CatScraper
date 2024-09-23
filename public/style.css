@@ -27,18 +27,19 @@ h1 {
 }
 
 .header {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 10px 20px;
-    background-color: #2c3e50;
+    background-color: #2c3e50; /* Achtergrondkleur van de header */
+    box-shadow: none; /* Verwijder eventuele schaduwen */
 }
 
 .header-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0; /* Verwijder padding */
+    background-color: #2c3e50; /* Achtergrondkleur van de container */
+    box-shadow: none; /* Verwijder schaduw */
 }
 
 .logo-container {
@@ -48,7 +49,7 @@ h1 {
 }
 
 .logo {
-    width: 20px;
+    width: 20px; /* Kleine breedte */
     height: auto;
     margin-right: 15px;
     filter: invert(100%);
@@ -153,6 +154,8 @@ progress {
     .header-container {
         flex-direction: column;
         align-items: flex-start;
+        padding: 0; /* Zorg dat er geen padding is */
+        background-color: #2c3e50; /* Behoud de achtergrondkleur */
     }
 
     .logo-container {
@@ -178,6 +181,6 @@ progress {
     }
 
     .logo {
-        width: 20px; /* Adjusted width */
+        width: 20px; /* Kleine breedte behouden */
     }
 }
