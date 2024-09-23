@@ -47,6 +47,7 @@ h1 {
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-shrink: 1; /* Laat de container krimpen indien nodig */
 }
 
 .logo {
@@ -59,6 +60,7 @@ h1 {
 .language-switcher {
     display: flex;
     align-items: center;
+    flex-shrink: 0; /* Voorkom dat de taalkeuzeknop krimpt */
 }
 
 .language-switcher label {
@@ -157,6 +159,7 @@ progress {
         justify-content: space-between;
         align-items: center;
         padding: 0; /* Verwijder padding */
+        max-width: 100%; /* Laat de container de volledige breedte gebruiken */
     }
 
     .logo-container {
@@ -188,5 +191,10 @@ progress {
     /* Zorg ervoor dat de header-container niet uitrekt buiten de container */
     .header-container {
         max-width: 100%;
+    }
+
+    /* Voeg eventueel padding toe aan de container voor beter uitlijning */
+    .header-container {
+        padding: 0 10px;
     }
 }
