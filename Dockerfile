@@ -1,66 +1,43 @@
-# Stage 1: Build Stage
-FROM node:20-alpine AS build
+# Use an official Node.js runtime as a parent image
+FROM node:16
 
-# Installeer benodigde dependencies voor Puppeteer
-RUN apk add --no-cache \
-    nss \
-    freetype \
-    freetype-dev \
-    harfbuzz \
-    ca-certificates \
-    ttf-freefont \
-    chromium \
-    bash \
-    chromium-chromedriver
-
-# Stel de werkdirectory in
+# Set the working directory in the container
 WORKDIR /app
 
-# Kopieer package.json en package-lock.json
+# Copy the package.json and package-lock.json files to the container
 COPY package*.json ./
 
-# Installeer applicatie dependencies
-RUN npm install --production
+# Install dependencies
+RUN npm install
 
-# Kopieer de rest van de applicatie
+# Copy the rest of the application to the container
 COPY . .
 
-# Stage 2: Production Stage
-FROM node:20-alpine
-
-# Installeer alleen de runtime dependencies
-RUN apk add --no-cache \
-    nss \
-    freetype \
-    freetype-dev \
-    harfbuzz \
-    ca-certificates \
-    ttf-freefont \
-    chromium \
-    chromium-chromedriver
-
-# Stel de werkdirectory in
-WORKDIR /app
-
-# Kopieer node_modules en applicatiebestanden van de build stage
-COPY --from=build /app /app
-
-# Maak de 'uploads' directory aan
-RUN mkdir -p /app/uploads
-
-# Zet de eigenaar van de 'uploads' directory op 'appuser'
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
-RUN chown -R appuser:appgroup /app/uploads
-
-# Zet omgevingsvariabelen voor Puppeteer
-ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
-ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
-
-# Wissel naar de non-root gebruiker
-USER appuser
-
-# Exposeer poort 5000
+# Expose the port the app will run on
 EXPOSE 5000
 
-# Start de applicatie
+# Define environment variable for Puppeteer
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+
+# Install necessary dependencies for Puppeteer
+RUN apt-get update && apt-get install -y \
+    libnss3 \
+    libxss1 \
+    libasound2 \
+    fonts-liberation \
+    libappindicator3-1 \
+    libatk-bridge2.0-0 \
+    libatk1.0-0 \
+    libgbm-dev \
+    libgtk-3-0 \
+    libx11-xcb1 \
+    libxcomposite1 \
+    libxcursor1 \
+    libxdamage1 \
+    libxfixes3 \
+    libxi6 \
+    libxtst6 \
+    xdg-utils
+
+# Start the application
 CMD ["npm", "start"]
