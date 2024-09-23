@@ -1,25 +1,21 @@
-# Use an official Node.js runtime as a parent image
-FROM node:16
+# Stage 1: Build
+FROM node:20 AS builder
 
-# Set the working directory in the container
 WORKDIR /app
 
-# Copy the package.json and package-lock.json files to the container
-COPY package*.json ./
+COPY package.json yarn.lock ./
 
-# Install dependencies
-RUN npm install
+RUN yarn install --frozen-lockfile
 
-# Copy the rest of the application to the container
 COPY . .
 
-# Expose the port the app will run on
-EXPOSE 5000
+# Stage 2: Production
+FROM node:20-slim
 
-# Define environment variable for Puppeteer
-ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+WORKDIR /app
 
-# Install necessary dependencies for Puppeteer
+COPY --from=builder /app ./
+
 RUN apt-get update && apt-get install -y \
     libnss3 \
     libxss1 \
@@ -37,7 +33,10 @@ RUN apt-get update && apt-get install -y \
     libxfixes3 \
     libxi6 \
     libxtst6 \
-    xdg-utils
+    xdg-utils && rm -rf /var/lib/apt/lists/*
 
-# Start the application
-CMD ["npm", "start"]
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+
+EXPOSE 5000
+
+CMD ["yarn", "start"]
