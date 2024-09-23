@@ -28,7 +28,7 @@ h1 {
 
 .header {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     padding: 10px 20px;
     background-color: #2c3e50;
@@ -44,6 +44,16 @@ h1 {
     width: 60px;
     height: auto;
     margin-right: 15px;
+}
+
+.language-switcher {
+    display: flex;
+    align-items: center;
+}
+
+.language-switcher label {
+    margin-right: 8px;
+    color: #ffffff;
 }
 
 form {
@@ -136,5 +146,12 @@ progress {
     }
     .logo {
         width: 50px;
+    }
+    .language-switcher {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .language-switcher label {
+        margin-bottom: 5px;
     }
 }
