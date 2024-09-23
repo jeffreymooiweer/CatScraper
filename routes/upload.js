@@ -5,6 +5,7 @@ const path = require('path');
 const fs = require('fs');
 const Joi = require('joi');
 const puppeteer = require('../utils/puppeteer');
+const ai = require('../utils/ai');
 const logger = require('../utils/logger');
 
 const router = express.Router();
@@ -149,6 +150,31 @@ router.post('/upload', upload.single('file'), async (req, res) => {
     } catch (error) {
         logger.error(`Error processing file: ${error.message}`);
         res.status(500).send('Error processing the file');
+    }
+});
+
+// Find selectors using AI
+router.post('/find-selectors', async (req, res) => {
+    const { apiKey, supplier1LoginURL, supplier1SearchURL, supplier2LoginURL, supplier2SearchURL } = req.body;
+
+    if (!apiKey || !supplier1LoginURL || !supplier1SearchURL || !supplier2LoginURL || !supplier2SearchURL) {
+        return res.status(400).json({ success: false, message: 'All fields are required.' });
+    }
+
+    try {
+        const selectorsSupplier1 = await ai.findSelectors(apiKey, supplier1LoginURL, supplier1SearchURL);
+        const selectorsSupplier2 = await ai.findSelectors(apiKey, supplier2LoginURL, supplier2SearchURL);
+
+        res.json({
+            success: true,
+            selectors: {
+                supplier1: selectorsSupplier1,
+                supplier2: selectorsSupplier2
+            }
+        });
+    } catch (error) {
+        logger.error(`AI Selector Error: ${error.message}`);
+        res.status(500).json({ success: false, message: 'Failed to find selectors using AI.' });
     }
 });
 
