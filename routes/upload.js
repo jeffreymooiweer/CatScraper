@@ -11,7 +11,7 @@ const logger = require('../utils/logger');
 const router = express.Router();
 const upload = multer({ dest: 'uploads/' });
 
-// Validation scheme
+// Validation schema
 const uploadSchema = Joi.object({
     column: Joi.string().required(),
     hasHeader: Joi.boolean(),
@@ -34,12 +34,13 @@ const uploadSchema = Joi.object({
     searchSelector2: Joi.string().required(),
     customerNumberRequired2: Joi.boolean(),
     customerNumberSelector2: Joi.string().when('customerNumberRequired2', { is: true, then: Joi.required() }),
-    customerNumber2: Joi.string().when('customerNumberRequired2', { is: true, then: Joi.required() })
+    customerNumber2: Joi.string().when('customerNumberRequired2', { is: true, then: Joi.required() }),
+    openaiApiKey: Joi.string().required()
 });
 
 // Homepage
 router.get('/', (req, res) => {
-    res.render('index');
+    res.render('index', { locale: res.getLocale() });
 });
 
 // Scan columns
@@ -96,7 +97,8 @@ router.post('/upload', upload.single('file'), async (req, res) => {
             searchSelector2,
             customerNumberRequired2,
             customerNumberSelector2,
-            customerNumber2
+            customerNumber2,
+            openaiApiKey
         } = value;
 
         const workbook = xlsx.readFile(filePath);
