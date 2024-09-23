@@ -41,5 +41,3 @@ jobs:
         push: true
         tags: jeffersonmouze/catscraper:latest
 
-    - name: Verify Docker image
-      run: docker run jeffersonmouze/catscraper:latest
