@@ -32,7 +32,7 @@ app.use((req, res, next) => {
     next();
 });
 
-// Routes
+// Routes.
 app.use('/', uploadRoutes);
 
 // Start the server
