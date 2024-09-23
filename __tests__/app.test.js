@@ -1,5 +1,3 @@
-// __tests__/app.test.js
-
 const request = require('supertest');
 const app = require('../app'); // Zorg ervoor dat dit pad correct is
 
@@ -7,8 +5,8 @@ const app = require('../app'); // Zorg ervoor dat dit pad correct is
 let server;
 
 beforeAll((done) => {
-  // Start de server voor de tests
-  server = app.listen(5000, () => {
+  // Start de server voor de tests op een willekeurige poort
+  server = app.listen(0, () => { // 0 wijst automatisch een beschikbare poort toe
     done();
   });
 });
@@ -30,3 +28,6 @@ describe('GET /', () => {
     expect(res.text).toContain('Upload Excel-bestand');
   });
 });
+
+// Verhoog de Jest timeout voor langlopende tests
+jest.setTimeout(10000); // 10 seconden
