@@ -11,7 +11,7 @@ const logger = require('../utils/logger');
 const router = express.Router();
 const upload = multer({ dest: 'uploads/' });
 
-// Validation schema
+// Validation scheme
 const uploadSchema = Joi.object({
     column: Joi.string().required(),
     hasHeader: Joi.boolean(),
