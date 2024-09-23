@@ -1,3 +1,4 @@
+/.dockerignore
 node_modules
 uploads
 npm-debug.log
@@ -6,5 +7,3 @@ yarn-error.log
 .github
 Dockerfile
 Dockerfile.*
-.dockerignore
-public/locales
