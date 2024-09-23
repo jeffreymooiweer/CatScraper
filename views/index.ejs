@@ -1,131 +1,138 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<%= locale %>">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Catscraper</title>
+    <title><%= __('Catscraper') %></title>
     <link rel="stylesheet" href="/style.css">
     <link rel="icon" href="/images/favicon.png" type="image/png">
 </head>
 <body>
     <header class="header">
         <div class="logo-container">
-            <img src="/images/catscraper.svg" alt="Catscraper Logo" class="logo">
-            <h1>Catscraper</h1>
+            <img src="/images/catscraper.svg" alt="<%= __('Catscraper Logo') %>" class="logo">
+            <h1><%= __('Catscraper') %></h1>
+        </div>
+        <div class="language-switcher">
+            <label for="languageSelect"><%= __('Language') %>:</label>
+            <select id="languageSelect" onchange="changeLanguage()">
+                <option value="nl" <%= locale === 'nl' ? 'selected' : '' %>>Nederlands</option>
+                <option value="en" <%= locale === 'en' ? 'selected' : '' %>>English</option>
+            </select>
         </div>
     </header>
     <div class="container">
         <form id="uploadForm" action="/upload" method="POST" enctype="multipart/form-data">
             <div class="form-group">
-                <label for="file">Upload Excel-bestand:</label>
+                <label for="file"><%= __('Upload Excel File') %>:</label>
                 <input type="file" name="file" id="file" required>
             </div>
             <div class="form-group">
-                <label for="column">Kies Kolom met Artikelnummers:</label>
+                <label for="column"><%= __('Choose Column with Article Numbers') %>:</label>
                 <select name="column" id="column" disabled required></select>
             </div>
             <div class="form-group checkbox-container">
-                <label for="hasHeader">Bestand bevat koptekst</label>
+                <label for="hasHeader"><%= __('File Contains Header') %></label>
                 <input type="checkbox" name="hasHeader" id="hasHeader">
             </div>
-            <!-- Leverancier 1 -->
-            <h3>Leverancier 1</h3>
+            <!-- Supplier 1 -->
+            <h3><%= __('Supplier 1') %></h3>
             <div class="supplier-section">
                 <div class="form-group">
-                    <label for="supplier1LoginURL">Inlog URL Leverancier 1:</label>
-                    <input type="url" name="supplier1LoginURL" id="supplier1LoginURL" required placeholder="https://leverancier1.com/login">
+                    <label for="supplier1LoginURL"><%= __('Supplier 1 Login URL') %>:</label>
+                    <input type="url" name="supplier1LoginURL" id="supplier1LoginURL" required placeholder="https://supplier1.com/login">
                 </div>
                 <div class="form-group">
-                    <label for="supplier1SearchURL">Zoek URL Leverancier 1:</label>
-                    <input type="url" name="supplier1SearchURL" id="supplier1SearchURL" required placeholder="https://leverancier1.com/search/{articleNumber}">
+                    <label for="supplier1SearchURL"><%= __('Supplier 1 Search URL') %>:</label>
+                    <input type="url" name="supplier1SearchURL" id="supplier1SearchURL" required placeholder="https://supplier1.com/search/{articleNumber}">
                 </div>
                 <div class="form-group">
-                    <label for="usernameSelector1">Selector Gebruikersnaam (ID):</label>
-                    <input type="text" name="usernameSelector1" id="usernameSelector1" required placeholder="Bijv. j_username">
+                    <label for="usernameSelector1"><%= __('Username Selector (ID)') %>:</label>
+                    <input type="text" name="usernameSelector1" id="usernameSelector1" required placeholder="<%= __('e.g., j_username') %>">
                 </div>
                 <div class="form-group">
-                    <label for="username1">Gebruikersnaam:</label>
+                    <label for="username1"><%= __('Username') %>:</label>
                     <input type="text" name="username1" required>
                 </div>
                 <div class="form-group">
-                    <label for="passwordSelector1">Selector Wachtwoord (ID):</label>
-                    <input type="text" name="passwordSelector1" id="passwordSelector1" required placeholder="Bijv. j_password">
+                    <label for="passwordSelector1"><%= __('Password Selector (ID)') %>:</label>
+                    <input type="text" name="passwordSelector1" id="passwordSelector1" required placeholder="<%= __('e.g., j_password') %>">
                 </div>
                 <div class="form-group">
-                    <label for="password1">Wachtwoord:</label>
+                    <label for="password1"><%= __('Password') %>:</label>
                     <input type="password" name="password1" required>
                 </div>
                 <div class="form-group">
-                    <label for="searchSelector1">Selector Zoekbalk (ID):</label>
-                    <input type="text" name="searchSelector1" id="searchSelector1" required placeholder="Bijv. search_input">
+                    <label for="searchSelector1"><%= __('Search Bar Selector (ID)') %>:</label>
+                    <input type="text" name="searchSelector1" id="searchSelector1" required placeholder="<%= __('e.g., search_input') %>">
                 </div>
                 <div class="form-group checkbox-container">
-                    <label for="customerNumberRequired1">Klantnummer vereist?</label>
+                    <label for="customerNumberRequired1"><%= __('Customer Number Required?') %></label>
                     <input type="checkbox" name="customerNumberRequired1" id="customerNumberRequired1" onchange="toggleCustomerNumber1()">
                 </div>
                 <div id="customerNumber1Section" style="display:none;">
                     <div class="form-group">
-                        <label for="customerNumberSelector1">Selector Klantnummer (ID):</label>
-                        <input type="text" name="customerNumberSelector1" id="customerNumberSelector1" placeholder="Bijv. customerNumber">
+                        <label for="customerNumberSelector1"><%= __('Customer Number Selector (ID)') %>:</label>
+                        <input type="text" name="customerNumberSelector1" id="customerNumberSelector1" placeholder="<%= __('e.g., customerNumber') %>">
                     </div>
                     <div class="form-group">
-                        <label for="customerNumber1">Klantnummer:</label>
+                        <label for="customerNumber1"><%= __('Customer Number') %>:</label>
                         <input type="text" name="customerNumber1" id="customerNumber1">
                     </div>
                 </div>
             </div>
-            <!-- Leverancier 2 -->
-            <h3>Leverancier 2</h3>
+            <!-- Supplier 2 -->
+            <h3><%= __('Supplier 2') %></h3>
             <div class="supplier-section">
                 <div class="form-group">
-                    <label for="supplier2LoginURL">Inlog URL Leverancier 2:</label>
-                    <input type="url" name="supplier2LoginURL" id="supplier2LoginURL" required placeholder="https://leverancier2.com/login">
+                    <label for="supplier2LoginURL"><%= __('Supplier 2 Login URL') %>:</label>
+                    <input type="url" name="supplier2LoginURL" id="supplier2LoginURL" required placeholder="https://supplier2.com/login">
                 </div>
                 <div class="form-group">
-                    <label for="supplier2SearchURL">Zoek URL Leverancier 2:</label>
-                    <input type="url" name="supplier2SearchURL" id="supplier2SearchURL" required placeholder="https://leverancier2.com/search/{supplierCode}">
+                    <label for="supplier2SearchURL"><%= __('Supplier 2 Search URL') %>:</label>
+                    <input type="url" name="supplier2SearchURL" id="supplier2SearchURL" required placeholder="https://supplier2.com/search/{supplierCode}">
                 </div>
                 <div class="form-group">
-                    <label for="usernameSelector2">Selector Gebruikersnaam (ID):</label>
-                    <input type="text" name="usernameSelector2" id="usernameSelector2" required placeholder="Bijv. j_username">
+                    <label for="usernameSelector2"><%= __('Username Selector (ID)') %>:</label>
+                    <input type="text" name="usernameSelector2" id="usernameSelector2" required placeholder="<%= __('e.g., j_username') %>">
                 </div>
                 <div class="form-group">
-                    <label for="username2">Gebruikersnaam:</label>
+                    <label for="username2"><%= __('Username') %>:</label>
                     <input type="text" name="username2" required>
                 </div>
                 <div class="form-group">
-                    <label for="passwordSelector2">Selector Wachtwoord (ID):</label>
-                    <input type="text" name="passwordSelector2" id="passwordSelector2" required placeholder="Bijv. j_password">
+                    <label for="passwordSelector2"><%= __('Password Selector (ID)') %>:</label>
+                    <input type="text" name="passwordSelector2" id="passwordSelector2" required placeholder="<%= __('e.g., j_password') %>">
                 </div>
                 <div class="form-group">
-                    <label for="password2">Wachtwoord:</label>
+                    <label for="password2"><%= __('Password') %>:</label>
                     <input type="password" name="password2" required>
                 </div>
                 <div class="form-group">
-                    <label for="searchSelector2">Selector Zoekbalk (ID):</label>
-                    <input type="text" name="searchSelector2" id="searchSelector2" required placeholder="Bijv. search_input">
+                    <label for="searchSelector2"><%= __('Search Bar Selector (ID)') %>:</label>
+                    <input type="text" name="searchSelector2" id="searchSelector2" required placeholder="<%= __('e.g., search_input') %>">
                 </div>
                 <div class="form-group checkbox-container">
-                    <label for="customerNumberRequired2">Klantnummer vereist?</label>
+                    <label for="customerNumberRequired2"><%= __('Customer Number Required?') %></label>
                     <input type="checkbox" name="customerNumberRequired2" id="customerNumberRequired2" onchange="toggleCustomerNumber2()">
                 </div>
                 <div id="customerNumber2Section" style="display:none;">
                     <div class="form-group">
-                        <label for="customerNumberSelector2">Selector Klantnummer (ID):</label>
-                        <input type="text" name="customerNumberSelector2" id="customerNumberSelector2" placeholder="Bijv. customerNumber">
+                        <label for="customerNumberSelector2"><%= __('Customer Number Selector (ID)') %>:</label>
+                        <input type="text" name="customerNumberSelector2" id="customerNumberSelector2" placeholder="<%= __('e.g., customerNumber') %>">
                     </div>
                     <div class="form-group">
-                        <label for="customerNumber2">Klantnummer:</label>
+                        <label for="customerNumber2"><%= __('Customer Number') %>:</label>
                         <input type="text" name="customerNumber2" id="customerNumber2">
                     </div>
                 </div>
             </div>
             <div class="form-group">
-                <label for="openaiApiKey">OpenAI API Key:</label>
-                <input type="text" name="openaiApiKey" id="openaiApiKey" placeholder="Voer je OpenAI API Key in">
+                <label for="openaiApiKey"><%= __('OpenAI API Key') %>:</label>
+                <input type="text" name="openaiApiKey" id="openaiApiKey" placeholder="<%= __('Enter your OpenAI API Key') %>">
             </div>
-            <button type="button" id="findSelectorsBtn">Zoek met AI</button>
-            <button type="submit">Uploaden en Verwerken</button>
+            <button type="button" id="findSelectorsBtn"><%= __('Find Selectors with AI') %></button>
+            <button type="submit"><%= __('Upload and Process') %></button>
         </form>
         <div id="progressContainer" style="display:none;">
             <progress id="progressBar" value="0" max="100"></progress>
@@ -142,6 +149,11 @@
             const section = document.getElementById('customerNumber2Section');
             section.style.display = section.style.display === 'none' ? 'block' : 'none';
         }
+        function changeLanguage() {
+            const lang = document.getElementById('languageSelect').value;
+            const currentUrl = window.location.href.split('?')[0];
+            window.location.href = `${currentUrl}?lang=${lang}`;
+        }
         document.getElementById('file').addEventListener('change', async function () {
             const formData = new FormData();
             formData.append('file', this.files[0]);
@@ -155,7 +167,7 @@
             columns.forEach(column => {
                 const option = document.createElement('option');
                 option.value = column;
-                option.textContent = `Kolom ${column}`;
+                option.textContent = `<%= __('Column') %> ${column}`;
                 columnSelect.appendChild(option);
             });
             columnSelect.disabled = false;
@@ -187,10 +199,10 @@
                 if (xhr.status === 200) {
                     const link = document.createElement('a');
                     link.href = window.URL.createObjectURL(xhr.response);
-                    link.download = 'AGM_bijgewerkt.xlsx';
+                    link.download = '<%= __("Processed.xlsx") %>';
                     link.click();
                 } else {
-                    alert('Error uploading and processing file.');
+                    alert('<%= __("Error uploading and processing file.") %>');
                 }
                 progressContainer.style.display = 'none';
             };
@@ -206,13 +218,13 @@
             const supplier2SearchURL = document.getElementById('supplier2SearchURL').value.trim();
 
             if (!apiKey || !supplier1LoginURL || !supplier1SearchURL || !supplier2LoginURL || !supplier2SearchURL) {
-                alert('Vul alle vereiste velden in voordat je AI zoekt.');
+                alert('<%= __("Please fill in all required fields before using AI.") %>');
                 return;
             }
 
             const aiMessage = document.getElementById('aiMessage');
             aiMessage.style.display = 'block';
-            aiMessage.textContent = 'Zoeken naar selectors met AI...';
+            aiMessage.textContent = '<%= __("Searching for selectors with AI...") %>';
 
             try {
                 const response = await fetch('/find-selectors', {
@@ -244,12 +256,12 @@
                     document.getElementById('searchSelector2').value = result.selectors.supplier2.searchSelector || '';
                     document.getElementById('customerNumberSelector2').value = result.selectors.supplier2.customerNumberSelector || '';
 
-                    aiMessage.textContent = 'Alle selectors zijn succesvol gevonden en ingevuld.';
+                    aiMessage.textContent = '<%= __("All selectors have been successfully found and filled.") %>';
                 } else {
-                    aiMessage.textContent = 'Fout bij het vinden van selectors: ' + result.message;
+                    aiMessage.textContent = '<%= __("Error finding selectors:") %> ' + result.message;
                 }
             } catch (error) {
-                aiMessage.textContent = 'Er is een fout opgetreden tijdens het zoeken met AI.';
+                aiMessage.textContent = '<%= __("An error occurred while searching with AI.") %>';
             }
         });
     </script>
