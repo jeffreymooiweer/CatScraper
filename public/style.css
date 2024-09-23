@@ -5,6 +5,11 @@ body {
     margin: 0;
     padding: 0;
     color: #333;
+    box-sizing: border-box;
+}
+
+*, *::before, *::after {
+    box-sizing: inherit;
 }
 
 h1 {
@@ -124,6 +129,10 @@ progress {
 @media (max-width: 768px) {
     .form-group, .supplier-section {
         width: 100%;
+        padding: 10px;
+    }
+    .supplier-section {
+        margin-right: 0;
     }
     .logo {
         width: 50px;
