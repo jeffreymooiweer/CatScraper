@@ -14,34 +14,30 @@
             <h1>Catscraper</h1>
         </div>
     </header>
-
     <div class="container">
-        <form action="/upload" method="POST" enctype="multipart/form-data">
+        <form id="uploadForm" action="/upload" method="POST" enctype="multipart/form-data">
             <div class="form-group">
                 <label for="file">Upload Excel-bestand:</label>
                 <input type="file" name="file" id="file" required>
             </div>
-
             <div class="form-group">
                 <label for="column">Kies Kolom met Artikelnummers:</label>
-                <select name="column" id="column" disabled></select>
+                <select name="column" id="column" disabled required></select>
             </div>
-
             <div class="form-group checkbox-container">
                 <label for="hasHeader">Bestand bevat koptekst</label>
                 <input type="checkbox" name="hasHeader" id="hasHeader">
             </div>
-
             <!-- Leverancier 1 -->
             <h3>Leverancier 1</h3>
             <div class="supplier-section">
                 <div class="form-group">
                     <label for="supplier1LoginURL">Inlog URL Leverancier 1:</label>
-                    <input type="text" name="supplier1LoginURL" required placeholder="https://leverancier1.com/login">
+                    <input type="url" name="supplier1LoginURL" required placeholder="https://leverancier1.com/login">
                 </div>
                 <div class="form-group">
                     <label for="supplier1SearchURL">Zoek URL Leverancier 1:</label>
-                    <input type="text" name="supplier1SearchURL" required placeholder="https://leverancier1.com/search/{articleNumber}">
+                    <input type="url" name="supplier1SearchURL" required placeholder="https://leverancier1.com/search/{articleNumber}">
                 </div>
                 <div class="form-group">
                     <label for="usernameSelector1">Selector Gebruikersnaam (ID):</label>
@@ -78,17 +74,16 @@
                     </div>
                 </div>
             </div>
-
             <!-- Leverancier 2 -->
             <h3>Leverancier 2</h3>
             <div class="supplier-section">
                 <div class="form-group">
                     <label for="supplier2LoginURL">Inlog URL Leverancier 2:</label>
-                    <input type="text" name="supplier2LoginURL" required placeholder="https://leverancier2.com/login">
+                    <input type="url" name="supplier2LoginURL" required placeholder="https://leverancier2.com/login">
                 </div>
                 <div class="form-group">
                     <label for="supplier2SearchURL">Zoek URL Leverancier 2:</label>
-                    <input type="text" name="supplier2SearchURL" required placeholder="https://leverancier2.com/search/{supplierCode}">
+                    <input type="url" name="supplier2SearchURL" required placeholder="https://leverancier2.com/search/{supplierCode}">
                 </div>
                 <div class="form-group">
                     <label for="usernameSelector2">Selector Gebruikersnaam (ID):</label>
@@ -125,34 +120,31 @@
                     </div>
                 </div>
             </div>
-
             <button type="submit">Uploaden en Verwerken</button>
         </form>
+        <div id="progressContainer" style="display:none;">
+            <progress id="progressBar" value="0" max="100"></progress>
+            <span id="progressText">0%</span>
+        </div>
     </div>
-
     <script>
         function toggleCustomerNumber1() {
             const section = document.getElementById('customerNumber1Section');
             section.style.display = section.style.display === 'none' ? 'block' : 'none';
         }
-
         function toggleCustomerNumber2() {
             const section = document.getElementById('customerNumber2Section');
             section.style.display = section.style.display === 'none' ? 'block' : 'none';
         }
-
         document.getElementById('file').addEventListener('change', async function () {
             const formData = new FormData();
             formData.append('file', this.files[0]);
-
             const response = await fetch('/scan-columns', {
                 method: 'POST',
                 body: formData,
             });
-
             const columns = await response.json();
             const columnSelect = document.getElementById('column');
-
             columnSelect.innerHTML = '';
             columns.forEach(column => {
                 const option = document.createElement('option');
@@ -160,8 +152,43 @@
                 option.textContent = `Kolom ${column}`;
                 columnSelect.appendChild(option);
             });
+            columnSelect.disabled = false;
+        });
 
-            columnSelect.disabled = false; // Enable dropdown after columns are loaded
+        document.getElementById('uploadForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const progressContainer = document.getElementById('progressContainer');
+            const progressBar = document.getElementById('progressBar');
+            const progressText = document.getElementById('progressText');
+            progressContainer.style.display = 'block';
+            progressBar.value = 0;
+            progressText.textContent = '0%';
+
+            const formData = new FormData(this);
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', '/upload', true);
+
+            xhr.upload.onprogress = function (event) {
+                if (event.lengthComputable) {
+                    const percent = Math.round((event.loaded / event.total) * 100);
+                    progressBar.value = percent;
+                    progressText.textContent = `${percent}%`;
+                }
+            };
+
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    const link = document.createElement('a');
+                    link.href = window.URL.createObjectURL(xhr.response);
+                    link.download = 'AGM_bijgewerkt.xlsx';
+                    link.click();
+                } else {
+                    alert('Error uploading and processing file.');
+                }
+                progressContainer.style.display = 'none';
+            };
+
+            xhr.send(formData);
         });
     </script>
 </body>
