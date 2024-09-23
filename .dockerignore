@@ -7,5 +7,4 @@ yarn-error.log
 Dockerfile
 Dockerfile.*
 .dockerignore
-yarn.lock
 public/locales
