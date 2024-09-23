@@ -33,15 +33,15 @@
             <div class="supplier-section">
                 <div class="form-group">
                     <label for="supplier1LoginURL">Inlog URL Leverancier 1:</label>
-                    <input type="url" name="supplier1LoginURL" required placeholder="https://leverancier1.com/login">
+                    <input type="url" name="supplier1LoginURL" id="supplier1LoginURL" required placeholder="https://leverancier1.com/login">
                 </div>
                 <div class="form-group">
                     <label for="supplier1SearchURL">Zoek URL Leverancier 1:</label>
-                    <input type="url" name="supplier1SearchURL" required placeholder="https://leverancier1.com/search/{articleNumber}">
+                    <input type="url" name="supplier1SearchURL" id="supplier1SearchURL" required placeholder="https://leverancier1.com/search/{articleNumber}">
                 </div>
                 <div class="form-group">
                     <label for="usernameSelector1">Selector Gebruikersnaam (ID):</label>
-                    <input type="text" name="usernameSelector1" required placeholder="Bijv. j_username">
+                    <input type="text" name="usernameSelector1" id="usernameSelector1" required placeholder="Bijv. j_username">
                 </div>
                 <div class="form-group">
                     <label for="username1">Gebruikersnaam:</label>
@@ -49,7 +49,7 @@
                 </div>
                 <div class="form-group">
                     <label for="passwordSelector1">Selector Wachtwoord (ID):</label>
-                    <input type="text" name="passwordSelector1" required placeholder="Bijv. j_password">
+                    <input type="text" name="passwordSelector1" id="passwordSelector1" required placeholder="Bijv. j_password">
                 </div>
                 <div class="form-group">
                     <label for="password1">Wachtwoord:</label>
@@ -57,7 +57,7 @@
                 </div>
                 <div class="form-group">
                     <label for="searchSelector1">Selector Zoekbalk (ID):</label>
-                    <input type="text" name="searchSelector1" required placeholder="Bijv. search_input">
+                    <input type="text" name="searchSelector1" id="searchSelector1" required placeholder="Bijv. search_input">
                 </div>
                 <div class="form-group checkbox-container">
                     <label for="customerNumberRequired1">Klantnummer vereist?</label>
@@ -66,11 +66,11 @@
                 <div id="customerNumber1Section" style="display:none;">
                     <div class="form-group">
                         <label for="customerNumberSelector1">Selector Klantnummer (ID):</label>
-                        <input type="text" name="customerNumberSelector1" placeholder="Bijv. customerNumber">
+                        <input type="text" name="customerNumberSelector1" id="customerNumberSelector1" placeholder="Bijv. customerNumber">
                     </div>
                     <div class="form-group">
                         <label for="customerNumber1">Klantnummer:</label>
-                        <input type="text" name="customerNumber1">
+                        <input type="text" name="customerNumber1" id="customerNumber1">
                     </div>
                 </div>
             </div>
@@ -79,15 +79,15 @@
             <div class="supplier-section">
                 <div class="form-group">
                     <label for="supplier2LoginURL">Inlog URL Leverancier 2:</label>
-                    <input type="url" name="supplier2LoginURL" required placeholder="https://leverancier2.com/login">
+                    <input type="url" name="supplier2LoginURL" id="supplier2LoginURL" required placeholder="https://leverancier2.com/login">
                 </div>
                 <div class="form-group">
                     <label for="supplier2SearchURL">Zoek URL Leverancier 2:</label>
-                    <input type="url" name="supplier2SearchURL" required placeholder="https://leverancier2.com/search/{supplierCode}">
+                    <input type="url" name="supplier2SearchURL" id="supplier2SearchURL" required placeholder="https://leverancier2.com/search/{supplierCode}">
                 </div>
                 <div class="form-group">
                     <label for="usernameSelector2">Selector Gebruikersnaam (ID):</label>
-                    <input type="text" name="usernameSelector2" required placeholder="Bijv. j_username">
+                    <input type="text" name="usernameSelector2" id="usernameSelector2" required placeholder="Bijv. j_username">
                 </div>
                 <div class="form-group">
                     <label for="username2">Gebruikersnaam:</label>
@@ -95,7 +95,7 @@
                 </div>
                 <div class="form-group">
                     <label for="passwordSelector2">Selector Wachtwoord (ID):</label>
-                    <input type="text" name="passwordSelector2" required placeholder="Bijv. j_password">
+                    <input type="text" name="passwordSelector2" id="passwordSelector2" required placeholder="Bijv. j_password">
                 </div>
                 <div class="form-group">
                     <label for="password2">Wachtwoord:</label>
@@ -103,7 +103,7 @@
                 </div>
                 <div class="form-group">
                     <label for="searchSelector2">Selector Zoekbalk (ID):</label>
-                    <input type="text" name="searchSelector2" required placeholder="Bijv. search_input">
+                    <input type="text" name="searchSelector2" id="searchSelector2" required placeholder="Bijv. search_input">
                 </div>
                 <div class="form-group checkbox-container">
                     <label for="customerNumberRequired2">Klantnummer vereist?</label>
@@ -112,20 +112,26 @@
                 <div id="customerNumber2Section" style="display:none;">
                     <div class="form-group">
                         <label for="customerNumberSelector2">Selector Klantnummer (ID):</label>
-                        <input type="text" name="customerNumberSelector2" placeholder="Bijv. customerNumber">
+                        <input type="text" name="customerNumberSelector2" id="customerNumberSelector2" placeholder="Bijv. customerNumber">
                     </div>
                     <div class="form-group">
                         <label for="customerNumber2">Klantnummer:</label>
-                        <input type="text" name="customerNumber2">
+                        <input type="text" name="customerNumber2" id="customerNumber2">
                     </div>
                 </div>
             </div>
+            <div class="form-group">
+                <label for="openaiApiKey">OpenAI API Key:</label>
+                <input type="text" name="openaiApiKey" id="openaiApiKey" placeholder="Voer je OpenAI API Key in">
+            </div>
+            <button type="button" id="findSelectorsBtn">Zoek met AI</button>
             <button type="submit">Uploaden en Verwerken</button>
         </form>
         <div id="progressContainer" style="display:none;">
             <progress id="progressBar" value="0" max="100"></progress>
             <span id="progressText">0%</span>
         </div>
+        <div id="aiMessage" style="display:none; margin-top: 20px;"></div>
     </div>
     <script>
         function toggleCustomerNumber1() {
@@ -167,6 +173,7 @@
             const formData = new FormData(this);
             const xhr = new XMLHttpRequest();
             xhr.open('POST', '/upload', true);
+            xhr.responseType = 'blob';
 
             xhr.upload.onprogress = function (event) {
                 if (event.lengthComputable) {
@@ -189,6 +196,61 @@
             };
 
             xhr.send(formData);
+        });
+
+        document.getElementById('findSelectorsBtn').addEventListener('click', async function () {
+            const apiKey = document.getElementById('openaiApiKey').value.trim();
+            const supplier1LoginURL = document.getElementById('supplier1LoginURL').value.trim();
+            const supplier1SearchURL = document.getElementById('supplier1SearchURL').value.trim();
+            const supplier2LoginURL = document.getElementById('supplier2LoginURL').value.trim();
+            const supplier2SearchURL = document.getElementById('supplier2SearchURL').value.trim();
+
+            if (!apiKey || !supplier1LoginURL || !supplier1SearchURL || !supplier2LoginURL || !supplier2SearchURL) {
+                alert('Vul alle vereiste velden in voordat je AI zoekt.');
+                return;
+            }
+
+            const aiMessage = document.getElementById('aiMessage');
+            aiMessage.style.display = 'block';
+            aiMessage.textContent = 'Zoeken naar selectors met AI...';
+
+            try {
+                const response = await fetch('/find-selectors', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        apiKey,
+                        supplier1LoginURL,
+                        supplier1SearchURL,
+                        supplier2LoginURL,
+                        supplier2SearchURL
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    // Populate selectors for Supplier 1
+                    document.getElementById('usernameSelector1').value = result.selectors.supplier1.usernameSelector || '';
+                    document.getElementById('passwordSelector1').value = result.selectors.supplier1.passwordSelector || '';
+                    document.getElementById('searchSelector1').value = result.selectors.supplier1.searchSelector || '';
+                    document.getElementById('customerNumberSelector1').value = result.selectors.supplier1.customerNumberSelector || '';
+                    
+                    // Populate selectors for Supplier 2
+                    document.getElementById('usernameSelector2').value = result.selectors.supplier2.usernameSelector || '';
+                    document.getElementById('passwordSelector2').value = result.selectors.supplier2.passwordSelector || '';
+                    document.getElementById('searchSelector2').value = result.selectors.supplier2.searchSelector || '';
+                    document.getElementById('customerNumberSelector2').value = result.selectors.supplier2.customerNumberSelector || '';
+
+                    aiMessage.textContent = 'Alle selectors zijn succesvol gevonden en ingevuld.';
+                } else {
+                    aiMessage.textContent = 'Fout bij het vinden van selectors: ' + result.message;
+                }
+            } catch (error) {
+                aiMessage.textContent = 'Er is een fout opgetreden tijdens het zoeken met AI.';
+            }
         });
     </script>
 </body>
