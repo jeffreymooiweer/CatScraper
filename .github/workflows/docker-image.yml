@@ -19,11 +19,13 @@ jobs:
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v1
 
-    - name: Login to DockerHub
-      uses: docker/login-action@v1
-      with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
+    - name: Install Yarn
+      run: |
+        curl -o- -L https://yarnpkg.com/install.sh | bash
+        export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+
+    - name: Install dependencies with Yarn
+      run: yarn install
 
     - name: Build and push Docker image
       uses: docker/build-push-action@v2
