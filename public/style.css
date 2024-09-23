@@ -15,6 +15,7 @@ body {
 h1 {
     font-size: 2rem;
     color: #ffffff;
+    margin: 0; /* Verwijder standaard marges */
 }
 
 .container {
@@ -152,35 +153,40 @@ progress {
 /* Responsive */
 @media (max-width: 768px) {
     .header-container {
-        flex-direction: column;
-        align-items: flex-start;
-        padding: 0; /* Zorg dat er geen padding is */
-        background-color: #2c3e50; /* Behoud de achtergrondkleur */
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0; /* Verwijder padding */
     }
 
     .logo-container {
-        margin-bottom: 10px;
+        flex: 1;
+        display: flex;
+        align-items: center;
     }
 
     .language-switcher {
-        width: 100%;
-        justify-content: flex-start;
+        flex: 1;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
     }
 
     .language-switcher label {
-        margin-bottom: 5px;
-    }
-
-    .form-group, .supplier-section {
-        width: 100%;
-        padding: 10px;
-    }
-
-    .supplier-section {
-        margin-right: 0;
+        margin-right: 5px;
+        font-size: 0.9rem;
     }
 
     .logo {
-        width: 20px; /* Kleine breedte behouden */
+        width: 20px; /* Behoud de kleine breedte */
+    }
+
+    h1 {
+        font-size: 1.5rem; /* Verklein de font grootte op mobiel */
+    }
+
+    /* Zorg ervoor dat de header-container niet uitrekt buiten de container */
+    .header-container {
+        max-width: 100%;
     }
 }
