@@ -44,6 +44,7 @@ h1 {
     width: 60px;
     height: auto;
     margin-right: 15px;
+    filter: invert(100%);
 }
 
 .language-switcher {
